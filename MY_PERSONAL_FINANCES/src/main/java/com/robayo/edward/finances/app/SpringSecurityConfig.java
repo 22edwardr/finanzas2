@@ -21,10 +21,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/images/**", "/listar**", "/locale").permitAll()
-				// .antMatchers("/ver/**").hasAnyRole("USER")
+		http.authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/images/**", "/locale").permitAll()
 				.anyRequest().authenticated().and().formLogin()
-				// .successHandler(successHandler)
 				.loginPage("/login").permitAll().and().logout().permitAll().and().exceptionHandling()
 				.accessDeniedPage("/error_403");
 	}
@@ -35,7 +33,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		builder.jdbcAuthentication().dataSource(datasource).passwordEncoder(passwordEncorder)
 				.usersByUsernameQuery("select username,password, enabled from users where username=?")
 				.authoritiesByUsernameQuery(
-						"select u.username, a.authority from authorities a inner join users u on a.user_id = u.id where u.username = ?");
+						"select u.email username,r.rol from usuario u inner join rol r on r.usuario_id = u.id where u.email = ? ");
 
 	}
 }

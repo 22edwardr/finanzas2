@@ -1,10 +1,9 @@
-use my_finances_db
-go
+use my_finances_db;
 
 delete from usuario where id in (1,2);
 
-insert into usuario(id, email, nombre, password, pregunta1, pregunta2, respuesta1, respuesta2) values (1,'edwardd_22@hotmail.com','Miguel Martinez','miclave123','Cual es mi animal favorito','En que año naci','Tigre','1956');
-insert into usuario(id, email, nombre, password, pregunta1, pregunta2, respuesta1, respuesta2) values (2,'efrobayo@gmail.com','Edward Robayo','miclave456','Cual es mi color favorito','Nombre de mejor amigo','Azul','Ninguno');
+insert into usuario(id, email, nombre, password, pregunta1, pregunta2, respuesta1, respuesta2, enabled) values (1,'edwardd_22@hotmail.com','Miguel Martinez','$2a$10$C33v390RRes2c9Jpu6GD9.lgr3PMQr.UKD.4UJpQZKUoQkhSjWvHe','Cual es mi animal favorito','En que año naci','Tigre','1956',1);
+insert into usuario(id, email, nombre, password, pregunta1, pregunta2, respuesta1, respuesta2, enabled) values (2,'efrobayo@gmail.com','Edward Robayo','$2a$10$bBTKl2wMnXDomTV1aYvDYOCLHrua.jnXvsaaZRVmzf5iMUOR5eVAK','Cual es mi color favorito','Nombre de mejor amigo','Azul','Ninguno',1);
 
 insert into rol(usuario_id,rol) values (1,'USUARIO');
 insert into rol(usuario_id,rol) values (2,'USUARIO');
@@ -72,4 +71,3 @@ insert into cotizacion(producto_id,nombre,valor) values (2,'Rozudo', 1235.13);
 insert into cotizacion(producto_id,nombre,valor) values (2,'Game hour', 3500);
 insert into cotizacion(producto_id,nombre,valor) values (2,'De la esquina', 2600);
 insert into cotizacion(producto_id,nombre,valor) values (2,'Centro mayor', 5200);
-go
