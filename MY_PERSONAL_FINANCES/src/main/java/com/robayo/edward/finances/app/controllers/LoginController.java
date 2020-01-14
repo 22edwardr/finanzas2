@@ -1,5 +1,6 @@
 package com.robayo.edward.finances.app.controllers;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Locale;
 
@@ -24,7 +25,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.robayo.edward.finances.app.exception.handler.ServiceException;
 import com.robayo.edward.finances.app.models.Usuario;
-import com.robayo.edward.finances.app.service.ILoginBusiness;
+import com.robayo.edward.finances.app.service.ILoginService;
+import com.robayo.edward.finances.app.service.IUploadFileService;
+import com.robayo.edward.finances.app.utils.MessageViewAggregator;
 
 @Controller
 @SessionAttributes("usuario")
@@ -33,9 +36,11 @@ public class LoginController {
 	@Autowired
 	private MessageSource messageSource;
 	@Autowired
-	private ILoginBusiness loginBusiness;
+	private ILoginService loginBusiness;
 	@Autowired
 	private BCryptPasswordEncoder passwordEncorder;
+	@Autowired
+	private IUploadFileService uploadFileService;
 
 	@GetMapping(value = { "/" })
 	public String index() {
@@ -74,24 +79,29 @@ public class LoginController {
 
 	@PostMapping("/register")
 	public String formUsuario(@Valid @ModelAttribute("usuario") Usuario usuario, BindingResult result, Model model,
-			Locale locale, @RequestParam("file") MultipartFile foto, SessionStatus status, RedirectAttributes flash) {
+			Locale locale, @RequestParam("file") MultipartFile foto, SessionStatus status, RedirectAttributes flash)
+			throws IOException {
 		if (result.hasErrors()) {
 			model.addAttribute("titulo", messageSource.getMessage("text.register.titulo", null, locale));
 			return "register";
 		}
 
-		if (!foto.isEmpty()) {
-
-		}
-
-		usuario.setPassword(passwordEncorder.encode(usuario.getPassword()));
 		try {
+			if (!foto.isEmpty()) {
+				String fileName;
+
+				fileName = uploadFileService.copy(foto);
+
+				flash.addFlashAttribute("info", messageSource.getMessage("text.cliente.flash.foto.subir.success",
+						new Object[] { fileName }, locale));
+				usuario.setFoto(fileName);
+			}
+
+			usuario.setPassword(passwordEncorder.encode(usuario.getPassword()));
+
 			loginBusiness.crearUsuario(usuario, Usuario.ROL_USUARIO);
 		} catch (ServiceException e) {
-			if(e.getMessage().equals("usuarioExistente"))
-				model.addAttribute("error", messageSource.getMessage("text.register.validation.usuarioExistente",
-						new Object[] { usuario.getEmail() }, locale));
-			
+			MessageViewAggregator.addMessageToModelFromServiceException(messageSource, model, locale, e);
 			return "register";
 		}
 

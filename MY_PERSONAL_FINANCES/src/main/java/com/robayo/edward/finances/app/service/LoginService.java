@@ -9,7 +9,7 @@ import com.robayo.edward.finances.app.models.Usuario;
 import com.robayo.edward.finances.app.repository.ILoginDao;
 
 @Service
-public class LoginBusiness implements ILoginBusiness {
+public class LoginService implements ILoginService {
 	@Autowired
 	private ILoginDao loginDao;
 
@@ -17,7 +17,7 @@ public class LoginBusiness implements ILoginBusiness {
 	@Transactional
 	public void crearUsuario(Usuario usuario, String rol) {
 		if (loginDao.existeUsuario(usuario.getEmail()))
-			throw new ServiceException("usuarioExistente");
+			throw new ServiceException("text.register.validation.usuarioExistente",new Object[] {usuario.getEmail()});
 		
 		Long idUsuario;
 		
