@@ -14,16 +14,18 @@ select 'Tabla usuario eliminada';
 
 
 create table usuario(
-	id			BIGINT 			PRIMARY KEY AUTO_INCREMENT,
-	email		VARCHAR(50)		NOT NULL UNIQUE,
-	nombre		VARCHAR(100)	NOT NULL,
-	password	VARCHAR(100)	NOT NULL,
-    enabled     BIT(1)          NOT NULL,
-	pregunta1	VARCHAR(100)	NULL,
-	pregunta2	VARCHAR(100)	NULL,
-	respuesta1	VARCHAR(100)	NULL,
-	respuesta2	VARCHAR(100)	NULL,
-	foto		VARCHAR(100)	NULL
+	id					BIGINT 			PRIMARY KEY AUTO_INCREMENT,
+	email				VARCHAR(50)		NOT NULL UNIQUE,
+	nombre				VARCHAR(100)	NOT NULL,
+	password			VARCHAR(100)	NOT NULL,
+    enabled    			BIT(1)          NOT NULL,
+	pregunta1			VARCHAR(100)	NULL,
+	pregunta2			VARCHAR(100)	NULL,
+	respuesta1			VARCHAR(100)	NULL,
+	respuesta2			VARCHAR(100)	NULL,
+	foto				VARCHAR(100)	NULL,
+	token_confirmacion	VARCHAR(10)		NULL,
+	fecha_creacion		DATETIME		NOT NULL
 );
 
 select 'Tabla usuario creada';

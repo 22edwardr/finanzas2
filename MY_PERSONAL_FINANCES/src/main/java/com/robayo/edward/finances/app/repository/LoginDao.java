@@ -26,6 +26,12 @@ public class LoginDao implements ILoginDao {
 
 		return count != null && count > 0;
 	}
+	
+	@Override
+	public String consultaEmailUsuarioTokenConfirmacion(String tokenConfirmacion) {
+		return jdbcTemplate.queryForObject("select top 1 email from usuario where token_confirmacion = ?", new Object[] { tokenConfirmacion },
+				String.class);
+	}
 
 	@Override
 	public Long crearUsuario(Usuario usuario) {
@@ -34,8 +40,9 @@ public class LoginDao implements ILoginDao {
 
 		jdbcTemplate.update(connection -> {
 			PreparedStatement ps = connection.prepareStatement(
-					"insert into usuario (email, nombre, password, enabled, pregunta1, pregunta2, respuesta1, respuesta2, foto) "
-							+ "values(?,?,?,1,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+					"insert into usuario (email, nombre, password, enabled, pregunta1, pregunta2, respuesta1, respuesta2, foto, fecha_creacion) "
+							+ "values(?,?,?,1,?,?,?,?,?,NOW())",
+					Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, usuario.getEmail());
 			ps.setString(2, usuario.getNombre());
 			ps.setString(3, usuario.getPassword());
@@ -52,8 +59,13 @@ public class LoginDao implements ILoginDao {
 	}
 
 	@Override
-	public int crearRol(Long idUsuario, String rol) {
-		return jdbcTemplate.update("insert into rol (usuario_id, rol) values(?,?)", idUsuario, rol);
+	public void crearRol(Long idUsuario, String rol) {
+		jdbcTemplate.update("insert into rol (usuario_id, rol) values(?,?)", idUsuario, rol);
+	}
+
+	@Override
+	public void actualizarTokenConfirmacionUsuario(String correo, String tokenConfirmacion) {
+		jdbcTemplate.update("update usuario set token_confirmacion = ? where email = ?", tokenConfirmacion, correo);
 	}
 
 }

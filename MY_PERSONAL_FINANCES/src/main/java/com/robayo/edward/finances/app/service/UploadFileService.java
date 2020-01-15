@@ -1,7 +1,5 @@
 package com.robayo.edward.finances.app.service;
 
-import com.robayo.edward.finances.app.exception.handler.ServiceException;
-
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 
@@ -26,7 +24,7 @@ import java.time.format.DateTimeFormatter;
 
 
 @Service
-public class UploadFileServiceImpl implements IUploadFileService
+public class UploadFileService implements IUploadFileService
 {
 	private static final String UPLOADS_FOLDER = "uploads";
 

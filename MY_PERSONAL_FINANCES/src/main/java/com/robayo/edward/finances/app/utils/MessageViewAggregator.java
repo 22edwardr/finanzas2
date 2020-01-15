@@ -7,11 +7,10 @@ import org.springframework.context.NoSuchMessageException;
 import org.springframework.ui.Model;
 
 import com.robayo.edward.finances.app.exception.handler.ServiceException;
-import com.robayo.edward.finances.app.exception.handler.ServiceExceptionTypes;
 
 public class MessageViewAggregator {
 
-	public static boolean addMessageToModel(Model model, ServiceExceptionTypes type, String message, Object... params) {
+	public static boolean addMessageToModel(Model model, MessageType type, String message, Object... params) {
 		if (model != null && type != null) {
 			model.addAttribute(type.toString(), message);
 
@@ -22,7 +21,7 @@ public class MessageViewAggregator {
 	}
 
 	public static boolean addMessageToModel(MessageSource messageSource, Model model, Locale locale,
-			ServiceExceptionTypes type, String message, Object... params) {
+			MessageType type, String message, Object... params) {
 		if (messageSource != null && locale != null) {
 			String finalMessage;
 

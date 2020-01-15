@@ -27,6 +27,7 @@ import com.robayo.edward.finances.app.exception.handler.ServiceException;
 import com.robayo.edward.finances.app.models.Usuario;
 import com.robayo.edward.finances.app.service.ILoginService;
 import com.robayo.edward.finances.app.service.IUploadFileService;
+import com.robayo.edward.finances.app.utils.MessageType;
 import com.robayo.edward.finances.app.utils.MessageViewAggregator;
 
 @Controller
@@ -52,16 +53,16 @@ public class LoginController {
 			@RequestParam(value = "logout", required = false) String logout, Model model, Principal principal,
 			RedirectAttributes flash, Locale locale) {
 		if (principal != null) {
-			flash.addFlashAttribute("info", messageSource.getMessage("text.login.already", null, locale));
+			flash.addFlashAttribute(MessageType.info.toString(), messageSource.getMessage("text.login.already", null, locale));
 			return "redirect:/";
 		}
 
 		if (error != null) {
-			model.addAttribute("error", messageSource.getMessage("text.login.error", null, locale));
+			model.addAttribute(MessageType.error.toString(), messageSource.getMessage("text.login.error", null, locale));
 		}
 
 		if (logout != null) {
-			model.addAttribute("success", messageSource.getMessage("text.login.logout", null, locale));
+			model.addAttribute(MessageType.success.toString(), messageSource.getMessage("text.login.logout", null, locale));
 		}
 
 		return "login";
@@ -76,7 +77,25 @@ public class LoginController {
 
 		return "register";
 	}
+	
+	@GetMapping("/confirmacionCorreo")
+	public String confirmacionCorreo(@RequestParam(value = "token", required = false) String token, Locale locale,RedirectAttributes flash) {
+		String email;
+		
+		email = null;
+		
+		try {
+			email = loginBusiness.confirmacionCorreoConfirmacionUsuario(token);
+		}catch(ServiceException e) {
+			MessageViewAggregator.addMessageToModelFromServiceException(messageSource, flash, locale, e);
+		}
+		
+		if(email != null) 
+			flash.addAttribute(MessageType.success.toString(),messageSource.getMessage("text.register.titulo", new Object[] {email}, locale));
 
+		return "redirect:/login";
+	}
+	
 	@PostMapping("/register")
 	public String formUsuario(@Valid @ModelAttribute("usuario") Usuario usuario, BindingResult result, Model model,
 			Locale locale, @RequestParam("file") MultipartFile foto, SessionStatus status, RedirectAttributes flash)
@@ -92,7 +111,7 @@ public class LoginController {
 
 				fileName = uploadFileService.copy(foto);
 
-				flash.addFlashAttribute("info", messageSource.getMessage("text.cliente.flash.foto.subir.success",
+				flash.addFlashAttribute(MessageType.info.toString(), messageSource.getMessage("text.cliente.flash.foto.subir.success",
 						new Object[] { fileName }, locale));
 				usuario.setFoto(fileName);
 			}
@@ -100,13 +119,15 @@ public class LoginController {
 			usuario.setPassword(passwordEncorder.encode(usuario.getPassword()));
 
 			loginBusiness.crearUsuario(usuario, Usuario.ROL_USUARIO);
+			
+			loginBusiness.envioCorreoConfirmacionUsuario(usuario);
 		} catch (ServiceException e) {
 			MessageViewAggregator.addMessageToModelFromServiceException(messageSource, model, locale, e);
 			return "register";
 		}
 
 		status.setComplete();
-		flash.addFlashAttribute("success", messageSource.getMessage("text.register.exitoso", null, locale));
+		flash.addFlashAttribute(MessageType.success.toString(), messageSource.getMessage("text.register.exitoso", null, locale));
 
 		return "redirect:/";
 	}

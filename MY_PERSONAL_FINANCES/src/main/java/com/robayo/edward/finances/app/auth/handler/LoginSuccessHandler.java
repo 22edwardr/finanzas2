@@ -16,6 +16,8 @@ import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.support.SessionFlashMapManager;
 
+import com.robayo.edward.finances.app.utils.MessageType;
+
 @Component
 public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
 	
@@ -35,7 +37,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
 		Locale locale = localeResolver.resolveLocale(request);
 		String mensaje = messageSource.getMessage("text.login.success", new Object[] {authentication.getName()}, locale);
 		
-		flashMap.put("success", mensaje);
+		flashMap.put(MessageType.success.toString(), mensaje);
 		flashMapManager.saveOutputFlashMap(flashMap, request, response);
 		
 		if(authentication != null) {
