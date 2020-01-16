@@ -5,6 +5,7 @@ import java.util.Locale;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.robayo.edward.finances.app.exception.handler.ServiceException;
 
@@ -12,7 +13,10 @@ public class MessageViewAggregator {
 
 	public static boolean addMessageToModel(Model model, MessageType type, String message, Object... params) {
 		if (model != null && type != null) {
-			model.addAttribute(type.toString(), message);
+			if (model instanceof RedirectAttributes)
+				((RedirectAttributes) model).addFlashAttribute(type.toString(), message);
+			else
+				model.addAttribute(type.toString(), message);
 
 			return true;
 		}

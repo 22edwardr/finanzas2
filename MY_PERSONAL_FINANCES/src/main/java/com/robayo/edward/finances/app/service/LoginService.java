@@ -1,7 +1,5 @@
 package com.robayo.edward.finances.app.service;
 
-import java.nio.file.Paths;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -70,7 +68,7 @@ public class LoginService implements ILoginService {
 			email = loginDao.consultaEmailUsuarioTokenConfirmacion(tokenConfirmacion);
 
 			if (email != null && email.trim().length() > 0) {
-				loginDao.actualizarTokenConfirmacionUsuario(email, tokenConfirmacion);
+				loginDao.actualizarTokenConfirmacionUsuario(email, null);
 
 				return email;
 			}

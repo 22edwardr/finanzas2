@@ -2,6 +2,7 @@ package com.robayo.edward.finances.app.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,8 +30,13 @@ public class LoginDao implements ILoginDao {
 	
 	@Override
 	public String consultaEmailUsuarioTokenConfirmacion(String tokenConfirmacion) {
-		return jdbcTemplate.queryForObject("select top 1 email from usuario where token_confirmacion = ?", new Object[] { tokenConfirmacion },
+		List<String> listEmails;
+		
+		listEmails = jdbcTemplate.queryForList("select email from usuario where token_confirmacion = ? limit 1", new Object[] { tokenConfirmacion },
 				String.class);
+		
+		return listEmails.isEmpty() ? null : listEmails.get(0);
+		
 	}
 
 	@Override

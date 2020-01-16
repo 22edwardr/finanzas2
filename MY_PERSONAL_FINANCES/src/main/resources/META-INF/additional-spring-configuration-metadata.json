@@ -1,5 +1,12 @@
-{"properties": [{
-  "name": "application.host",
-  "type": "java.lang.String",
-  "description": "Host donde estara desplegada la aplicacion"
-}]}
+{"properties": [
+  {
+    "name": "application.host",
+    "type": "java.lang.String",
+    "description": "Host donde estara desplegada la aplicacion"
+  },
+  {
+    "name": "application.scheduled.eliminacionCuentas.crono",
+    "type": "java.lang.String",
+    "description": "Crono de programado para tarea de eliminacion de cuentas"
+  }
+]}

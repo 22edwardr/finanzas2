@@ -64,6 +64,8 @@ public class LoginController {
 		if (logout != null) {
 			model.addAttribute(MessageType.success.toString(), messageSource.getMessage("text.login.logout", null, locale));
 		}
+		
+		model.addAttribute("titulo", messageSource.getMessage("text.login.inicioDeSesion", null, locale));
 
 		return "login";
 	}
@@ -91,7 +93,7 @@ public class LoginController {
 		}
 		
 		if(email != null) 
-			flash.addAttribute(MessageType.success.toString(),messageSource.getMessage("text.register.titulo", new Object[] {email}, locale));
+			flash.addFlashAttribute(MessageType.success.toString(),messageSource.getMessage("text.register.correoConfirmado", new Object[] {email}, locale));
 
 		return "redirect:/login";
 	}
