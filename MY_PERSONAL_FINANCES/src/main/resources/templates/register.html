@@ -17,55 +17,86 @@
 
 				<form th:action="@{/register}" th:object="${usuario}" method="POST"
 					enctype="multipart/form-data">
-					
+
 					<div class="form-group row">
-						<label class="col-sm-2 col-form-label" th:text="#{text.register.email}">Email</label>
+						<div class="col-sm-1">
+							<input type="radio" name="tipoOlvido" value="P">
+						</div>
+						<label class="col-sm-2 col-form-label">Pregunta</label>
+						<div class="col-sm-1">
+							<input type="radio" name="tipoOlvido" value="E">
+						</div>
+						<label class="col-sm-2 col-form-label">Correo</label>
+					</div>
+
+
+
+
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label"
+							th:text="#{text.register.email}">Email</label>
 						<div class="col-sm-6">
-							<input type="text" th:field="*{email}" class="form-control" th:errorClass="'form-control alert-danger'" />
+							<input type="text" th:field="*{email}" class="form-control"
+								th:errorClass="'form-control alert-danger'" />
 						</div>
 					</div>
-					
+
 					<div class="form-group row">
-						<label class="col-sm-2 col-form-label" th:text="#{text.register.nombre}">Nombre</label>
+						<label class="col-sm-2 col-form-label"
+							th:text="#{text.register.nombre}">Nombre</label>
 						<div class="col-sm-6">
-							<input type="text" th:field="*{nombre}" class="form-control" th:errorClass="'form-control alert-danger'" />
+							<input type="text" th:field="*{nombre}" class="form-control"
+								th:errorClass="'form-control alert-danger'" />
 						</div>
 					</div>
-					
+
 					<div class="form-group row">
-						<label class="col-sm-2 col-form-label" th:text="#{text.register.pregunta1}">Pregunta1</label>
+						<label class="col-sm-2 col-form-label"
+							th:text="#{text.register.pregunta1}">Pregunta1</label>
 						<div class="col-sm-6">
-							<input type="text" th:field="*{pregunta1}" class="form-control" th:errorClass="'form-control alert-danger'" />
-						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label" th:text="#{text.register.respuesta1}">Respuesta1</label>
-						<div class="col-sm-6">
-							<input type="text" th:field="*{respuesta1}" class="form-control" th:errorClass="'form-control alert-danger'" />
-						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label" th:text="#{text.register.pregunta2}">Pregunta2</label>
-						<div class="col-sm-6">
-							<input type="text" th:field="*{pregunta2}" class="form-control" th:errorClass="'form-control alert-danger'" />
-						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label" th:text="#{text.register.respuesta2}">Respuesta2</label>
-						<div class="col-sm-6">
-							<input type="text" th:field="*{respuesta2}" class="form-control" th:errorClass="'form-control alert-danger'" />
-						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label" th:text="#{text.register.password}">Contraseña</label>
-						<div class="col-sm-6">
-							<input type="password" th:field="*{password}" class="form-control" th:errorClass="'form-control alert-danger'" />
+							<input type="text" th:field="*{pregunta1}" class="form-control"
+								th:errorClass="'form-control alert-danger'" />
 						</div>
 					</div>
 					<div class="form-group row">
-						<label class="col-sm-2 col-form-label" th:text="#{text.register.confirmPassword}">Confirmar Contraseña</label>
+						<label class="col-sm-2 col-form-label"
+							th:text="#{text.register.respuesta1}">Respuesta1</label>
 						<div class="col-sm-6">
-							<input type="password" th:field="*{confirmPassword}" class="form-control" th:errorClass="'form-control alert-danger'" />
+							<input type="text" th:field="*{respuesta1}" class="form-control"
+								th:errorClass="'form-control alert-danger'" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label"
+							th:text="#{text.register.pregunta2}">Pregunta2</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{pregunta2}" class="form-control"
+								th:errorClass="'form-control alert-danger'" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label"
+							th:text="#{text.register.respuesta2}">Respuesta2</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{respuesta2}" class="form-control"
+								th:errorClass="'form-control alert-danger'" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label"
+							th:text="#{text.register.password}">Contraseña</label>
+						<div class="col-sm-6">
+							<input type="password" th:field="*{password}"
+								class="form-control" th:errorClass="'form-control alert-danger'" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label"
+							th:text="#{text.register.confirmPassword}">Confirmar
+							Contraseña</label>
+						<div class="col-sm-6">
+							<input type="password" th:field="*{confirmPassword}"
+								class="form-control" th:errorClass="'form-control alert-danger'" />
 						</div>
 					</div>
 					<div class="form-group row">
@@ -80,9 +111,9 @@
 								class="form-control btn btn-secondary" />
 						</div>
 					</div>
-					
-					
-					</form>
+
+
+				</form>
 			</div>
 		</div>
 	</div>

@@ -12,4 +12,6 @@ public interface ILoginDao {
 	public void actualizarTokenConfirmacionUsuario(String email,String tokenConfirmacion);
 	
 	public String consultaEmailUsuarioTokenConfirmacion(String tokenConfirmacion);
+	
+	public int eliminarUsuariosSinConfirmacion();
 }

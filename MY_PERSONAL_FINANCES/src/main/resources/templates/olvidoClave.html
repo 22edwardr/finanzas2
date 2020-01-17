@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head">
+</head>
+<body>
+	<header th:replace="layout/layout :: header"></header>
+	<div class="container py-4">
+		<div class="card bg-light">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+				<div th:object="${usuario}" th:remove="tag">
+					<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+						<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+					</ul>
+				</div>
+
+				<form th:action="@{/register}" th:object="${usuario}" method="POST"
+					enctype="multipart/form-data">
+					
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label" th:text="#{text.register.email}">Email</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{email}" class="form-control" th:errorClass="'form-control alert-danger'" />
+						</div>
+					</div>
+					
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label" th:text="#{text.register.nombre}">Nombre</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{nombre}" class="form-control" th:errorClass="'form-control alert-danger'" />
+						</div>
+					</div>
+					
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label" th:text="#{text.register.pregunta1}">Pregunta1</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{pregunta1}" class="form-control" th:errorClass="'form-control alert-danger'" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label" th:text="#{text.register.respuesta1}">Respuesta1</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{respuesta1}" class="form-control" th:errorClass="'form-control alert-danger'" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label" th:text="#{text.register.pregunta2}">Pregunta2</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{pregunta2}" class="form-control" th:errorClass="'form-control alert-danger'" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label" th:text="#{text.register.respuesta2}">Respuesta2</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{respuesta2}" class="form-control" th:errorClass="'form-control alert-danger'" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label" th:text="#{text.register.password}">Contraseña</label>
+						<div class="col-sm-6">
+							<input type="password" th:field="*{password}" class="form-control" th:errorClass="'form-control alert-danger'" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label" th:text="#{text.register.confirmPassword}">Confirmar Contraseña</label>
+						<div class="col-sm-6">
+							<input type="password" th:field="*{confirmPassword}" class="form-control" th:errorClass="'form-control alert-danger'" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="file" class="col-sm-2 col-form-label"></label>
+						<div class="col-sm-6">
+							<input type="file" name="file" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group  row">
+						<div class="col-sm-8">
+							<input type="submit" th:value="#{text.register.enviar}"
+								class="form-control btn btn-secondary" />
+						</div>
+					</div>
+					
+					
+					</form>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

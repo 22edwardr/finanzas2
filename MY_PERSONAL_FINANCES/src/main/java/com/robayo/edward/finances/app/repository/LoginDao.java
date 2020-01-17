@@ -74,4 +74,9 @@ public class LoginDao implements ILoginDao {
 		jdbcTemplate.update("update usuario set token_confirmacion = ? where email = ?", tokenConfirmacion, correo);
 	}
 
+	@Override
+	public int eliminarUsuariosSinConfirmacion() {
+		return jdbcTemplate.update("delete from usuario where token_confirmacion is not null  and DATE_ADD(fecha_creacion,interval 1 day) < NOW()");
+	}
+
 }

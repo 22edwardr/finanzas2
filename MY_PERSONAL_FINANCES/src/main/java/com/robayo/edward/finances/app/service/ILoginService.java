@@ -8,4 +8,6 @@ public interface ILoginService {
 	public void envioCorreoConfirmacionUsuario(Usuario usuario);
 	
 	public String confirmacionCorreoConfirmacionUsuario(String tokenConfirmacion);
+	
+	public int eliminarUsuariosSinConfirmacion();
 }

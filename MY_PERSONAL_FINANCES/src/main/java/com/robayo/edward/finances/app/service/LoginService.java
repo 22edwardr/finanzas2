@@ -77,4 +77,10 @@ public class LoginService implements ILoginService {
 		throw new ServiceException("text.exception.tokenInvalido");
 	}
 
+	@Override
+	public int eliminarUsuariosSinConfirmacion() {
+		return loginDao.eliminarUsuariosSinConfirmacion();
+
+	}
+
 }
