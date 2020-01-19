@@ -15,77 +15,153 @@
 					</ul>
 				</div>
 
-				<form th:action="@{/register}" th:object="${usuario}" method="POST"
-					enctype="multipart/form-data">
-					
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label" th:text="#{text.register.email}">Email</label>
-						<div class="col-sm-6">
-							<input type="text" th:field="*{email}" class="form-control" th:errorClass="'form-control alert-danger'" />
-						</div>
+				<div class="form-group row">
+					<div class="col-sm-1">
+						<input type="radio" id="tipoOlvidoP" name="tipoOlvido" value="P">
 					</div>
-					
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label" th:text="#{text.register.nombre}">Nombre</label>
-						<div class="col-sm-6">
-							<input type="text" th:field="*{nombre}" class="form-control" th:errorClass="'form-control alert-danger'" />
-						</div>
+					<label class="col-sm-2 col-form-label"
+						th:text="#{text.olvidoClave.preguntas}">Preguntas</label>
+					<div class="col-sm-1">
+						<input type="radio" id="tipoOlvidoE" name="tipoOlvido" value="E">
 					</div>
-					
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label" th:text="#{text.register.pregunta1}">Pregunta1</label>
-						<div class="col-sm-6">
-							<input type="text" th:field="*{pregunta1}" class="form-control" th:errorClass="'form-control alert-danger'" />
+					<label class="col-sm-2 col-form-label"
+						th:text="#{text.register.email}">Email</label>
+				</div>
+
+				<div id="preguntas">
+					<form th:action="@{/olvidoClave/preguntas}" th:object="${usuario}"
+						method="POST" enctype="multipart/form-data">
+
+						<div class="form-group row">
+							<label class="col-sm-2 col-form-label"
+								th:text="#{text.register.email}">Email</label>
+							<div class="col-sm-6">
+								<input type="text" id="email" th:field="*{email}"
+									class="form-control"
+									th:errorClass="'form-control alert-danger'" />
+							</div>
 						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label" th:text="#{text.register.respuesta1}">Respuesta1</label>
-						<div class="col-sm-6">
-							<input type="text" th:field="*{respuesta1}" class="form-control" th:errorClass="'form-control alert-danger'" />
+
+						<button class="btn btn-success" type="button" id="cargarPreguntas"
+							th:text="#{text.olvidoClave.cargarPreguntas}">Cargar
+							Preguntas</button>
+						<div class="form-group row">
+							<label class="col-sm-2 col-form-label"
+								th:text="#{text.register.pregunta1}">Pregunta1</label>
+							<div class="col-sm-6">
+								<input type="text" id="pregunta1" th:field="*{pregunta1}"
+									class="form-control"
+									th:errorClass="'form-control alert-danger'" disabled="disabled" />
+							</div>
 						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label" th:text="#{text.register.pregunta2}">Pregunta2</label>
-						<div class="col-sm-6">
-							<input type="text" th:field="*{pregunta2}" class="form-control" th:errorClass="'form-control alert-danger'" />
+						<div class="form-group row">
+							<label class="col-sm-2 col-form-label"
+								th:text="#{text.register.respuesta1}">Respuesta1</label>
+							<div class="col-sm-6">
+								<input type="text" th:field="*{respuesta1}" class="form-control"
+									th:errorClass="'form-control alert-danger'" />
+							</div>
 						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label" th:text="#{text.register.respuesta2}">Respuesta2</label>
-						<div class="col-sm-6">
-							<input type="text" th:field="*{respuesta2}" class="form-control" th:errorClass="'form-control alert-danger'" />
+						<div class="form-group row">
+							<label class="col-sm-2 col-form-label"
+								th:text="#{text.register.pregunta2}">Pregunta2</label>
+							<div class="col-sm-6">
+								<input type="text" id="pregunta2" th:field="*{pregunta2}"
+									class="form-control"
+									th:errorClass="'form-control alert-danger'" disabled="disabled" />
+							</div>
 						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label" th:text="#{text.register.password}">Contraseña</label>
-						<div class="col-sm-6">
-							<input type="password" th:field="*{password}" class="form-control" th:errorClass="'form-control alert-danger'" />
+						<div class="form-group row">
+							<label class="col-sm-2 col-form-label"
+								th:text="#{text.register.respuesta2}">Respuesta2</label>
+							<div class="col-sm-6">
+								<input type="text" th:field="*{respuesta2}" class="form-control"
+									th:errorClass="'form-control alert-danger'" />
+							</div>
 						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label" th:text="#{text.register.confirmPassword}">Confirmar Contraseña</label>
-						<div class="col-sm-6">
-							<input type="password" th:field="*{confirmPassword}" class="form-control" th:errorClass="'form-control alert-danger'" />
+
+						<div class="form-group  row">
+							<div class="col-sm-8">
+								<input type="submit" th:value="#{text.register.enviar}"
+									class="form-control btn btn-secondary" />
+							</div>
 						</div>
-					</div>
-					<div class="form-group row">
-						<label for="file" class="col-sm-2 col-form-label"></label>
-						<div class="col-sm-6">
-							<input type="file" name="file" class="form-control" />
-						</div>
-					</div>
-					<div class="form-group  row">
-						<div class="col-sm-8">
-							<input type="submit" th:value="#{text.register.enviar}"
-								class="form-control btn btn-secondary" />
-						</div>
-					</div>
-					
-					
+
 					</form>
+
+				</div>
+				<div id="correo">
+					<form th:action="@{/olvidoClave/email}" th:object="${usuario}"
+						method="POST" enctype="multipart/form-data">
+
+						<div class="form-group row">
+							<label class="col-sm-2 col-form-label"
+								th:text="#{text.register.email}">Email</label>
+							<div class="col-sm-6">
+								<input type="text" id="email" th:field="*{email}"
+									class="form-control"
+									th:errorClass="'form-control alert-danger'" />
+							</div>
+						</div>
+						
+						<div class="form-group  row">
+							<div class="col-sm-8">
+								<input type="submit" th:value="#{text.register.enviar}"
+									class="form-control btn btn-secondary" />
+							</div>
+						</div>
+
+					</form>
+				</div>
+
+
 			</div>
 		</div>
 	</div>
 	<footer th:replace="layout/layout :: footer"></footer>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#tipoOlvidoP').prop("checked", true);
+
+			tipoOlvidoChange();
+		});
+
+		$('#cargarPreguntas').click(function() {
+			$.ajax({
+				url : '/olvidoClave/cargarPreguntas/' + $('#email').val(),
+				dataType : 'json',
+				type : 'GET',
+				success : function(data) {
+					$('#pregunta1').val(data.pregunta1);
+					$('#pregunta2').val(data.pregunta2);
+				}
+			});
+		});
+
+		$('form').submit(function(e) {
+			$(':disabled').each(function(e) {
+				$(this).removeAttr('disabled');
+			})
+		});
+
+		$('input:radio[name=tipoOlvido]').change(function() {
+			tipoOlvidoChange();
+		});
+
+		function tipoOlvidoChange() {
+
+			var tipoOlvido;
+			tipoOlvido = $('input:radio[name=tipoOlvido]:checked').val();
+
+			$('#preguntas').hide();
+			$('#correo').hide();
+
+			if (tipoOlvido == 'P') {
+				$('#preguntas').show();
+			}else{
+				$('#correo').show();
+			}
+		}
+	</script>
 </body>
 </html>

@@ -27,7 +27,7 @@ public class CorreoService implements ICorreoService {
 			mimeMessageHelper.setSubject(mail.getMailSubject());
 			mimeMessageHelper.setFrom(new InternetAddress(mail.getMailFrom(), "MyPersonalFinances"));
 			mimeMessageHelper.setTo(mail.getMailTo());
-			mimeMessageHelper.setText(mail.getMailContent());
+			mimeMessageHelper.setText(mail.getMailContent(),true);
 			mailSender.send(mimeMessageHelper.getMimeMessage());
 		} catch (MessagingException | UnsupportedEncodingException e) {
 			throw new RuntimeException("errorEnvioCorreo", e);

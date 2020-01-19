@@ -8,32 +8,58 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 public class Usuario implements Serializable {
-	private static final long serialVersionUID = 1L;
-	public static final String ROL_USUARIO = "USUARIO";
-	public static final String ROL_ADMIN= "ADMINISTRADOR";
-	private Long id;
-	@NotEmpty
-	@Email
-	private String email;
-	@NotEmpty
-	private String nombre;
-	@NotEmpty
-	@Size(min = 8, max = 20)
-	private String password;
-	private String confirmPassword;
-	private boolean enabled;
-	private String pregunta1;
-	private String pregunta2;
-	private String respuesta1;
-	private String respuesta2;
-	private String foto;
-	
-	@Override
-	public String toString() {
-		return "Usuario[email:" + email + ",nombre:" +nombre + "]";
+
+	public interface RegistroValidator {
 	}
 
-	@AssertTrue
+	public interface OlvidoClaveValidatorPreguntas {
+	}
+	
+	public interface OlvidoClaveValidatorEmail{
+		
+	}
+
+	private static final long serialVersionUID = 1L;
+	public static final String ROL_USUARIO = "USUARIO";
+	public static final String ROL_ADMIN = "ADMINISTRADOR";
+
+	private Long id;
+
+	@NotEmpty(groups = { RegistroValidator.class, OlvidoClaveValidatorPreguntas.class,OlvidoClaveValidatorEmail.class })
+	@Email(groups = { RegistroValidator.class, OlvidoClaveValidatorPreguntas.class,OlvidoClaveValidatorEmail.class })
+	private String email;
+
+	@NotEmpty(groups = RegistroValidator.class)
+	private String nombre;
+
+	@NotEmpty(groups = RegistroValidator.class)
+	@Size(min = 8, max = 20, groups = RegistroValidator.class)
+	private String password;
+
+	private String confirmPassword;
+
+	private boolean enabled;
+
+	@NotEmpty(groups = { RegistroValidator.class, OlvidoClaveValidatorPreguntas.class })
+	private String pregunta1;
+
+	@NotEmpty(groups = { RegistroValidator.class, OlvidoClaveValidatorPreguntas.class })
+	private String pregunta2;
+
+	@NotEmpty(groups = { RegistroValidator.class, OlvidoClaveValidatorPreguntas.class })
+	private String respuesta1;
+
+	@NotEmpty(groups = { RegistroValidator.class, OlvidoClaveValidatorPreguntas.class })
+	private String respuesta2;
+
+	private String foto;
+
+	@Override
+	public String toString() {
+		return "Usuario[email:" + email + ",nombre:" + nombre + "]";
+	}
+
+	@AssertTrue(groups = RegistroValidator.class)
 	public boolean isCorrectPassword() {
 		String password = this.password != null ? this.password : "";
 		String confirmPassword = this.confirmPassword != null ? this.confirmPassword : "";
@@ -120,7 +146,7 @@ public class Usuario implements Serializable {
 	public void setFoto(String foto) {
 		this.foto = foto;
 	}
-	
+
 	public String getConfirmPassword() {
 		return confirmPassword;
 	}
