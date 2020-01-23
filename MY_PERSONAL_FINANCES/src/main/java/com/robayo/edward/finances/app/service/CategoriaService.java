@@ -39,4 +39,9 @@ public class CategoriaService implements ICategoriaService {
 		return categoriaDao.consultaTodos(usuarioId, likeText);
 	}
 
+	@Override
+	public Categoria consultaUno(Long id) {
+		return categoriaDao.consultaUno(id);
+	}
+
 }

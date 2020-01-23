@@ -14,4 +14,6 @@ public interface ICategoriaDao {
 	
 	public List<Categoria> consultaTodos(Long usuarioId, String likeText);
 	
+	public Categoria consultaUno(Long id);
+	
 }

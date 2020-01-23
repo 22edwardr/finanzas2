@@ -5,14 +5,14 @@ delete from usuario where id in (1,2);
 insert into usuario(id, email, nombre, password, pregunta1, pregunta2, respuesta1, respuesta2, enabled, fecha_creacion) values (1,'a@hotmail.com','Miguel Martinez','$2a$10$C33v390RRes2c9Jpu6GD9.lgr3PMQr.UKD.4UJpQZKUoQkhSjWvHe','Cual es mi animal favorito','En que año naci','Tigre','1956',1, NOW());
 insert into usuario(id, email, nombre, password, pregunta1, pregunta2, respuesta1, respuesta2, enabled, fecha_creacion) values (2,'b@gmail.com','Edward Robayo','$2a$10$bBTKl2wMnXDomTV1aYvDYOCLHrua.jnXvsaaZRVmzf5iMUOR5eVAK','Cual es mi color favorito','Nombre de mejor amigo','Azul','Ninguno',1, NOW());
 
-insert into rol(usuario_id,rol) values (1,'USUARIO');
-insert into rol(usuario_id,rol) values (2,'USUARIO');
-insert into rol(usuario_id,rol) values (2,'ADMINISTRADOR');
+insert into rol(usuario_id,rol) values (1,'ROLE_USUARIO');
+insert into rol(usuario_id,rol) values (2,'ROLE_USUARIO');
+insert into rol(usuario_id,rol) values (2,'ROLE_ADMINISTRADOR');
 
 insert into categoria(id,usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color) values (1,1,'VIV','C',1,'Vivienda','Lo del arriendo','12345678');
 insert into categoria(id,usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color) values (2,1,'ALI','C',1,'Alimentacion','Mercado a la lata','FF002255');
 insert into categoria(id,usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color) values (3,1,'SUE','D',1,'Sueldo','Mi trabajito','AA669977');
-insert into categoria(id,usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color) values (4,2,'HOS','C',1,'Hospedaje',NULL,'12345678');
+insert into categoria(id,usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color) values (4,2,'HOS','C',0,'Hospedaje',NULL,'12345678');
 insert into categoria(id,usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color) values (5,2,'ALI','C',1,'Alimentacion',NULL,'FF002255');
 insert into categoria(id,usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color) values (6,2,'TRA','D',1,'Trabajo',NULL,'CC998822');
 

@@ -12,4 +12,6 @@ public interface ICategoriaService {
 	public void actualizarEstadoCategoria(Long id, boolean estado);
 
 	public List<Categoria> consultaTodos(Long usuarioId, String likeText);
+	
+	public Categoria consultaUno(Long id);
 }

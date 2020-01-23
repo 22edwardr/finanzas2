@@ -4,10 +4,14 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,9 +52,12 @@ public class LoginController {
 	private IUploadFileService uploadFileService;
 
 	@GetMapping(value = { "/" })
-	public String index(Model model, Locale locale) {
+	public String index(Model model, Locale locale,HttpServletRequest request) {
 		model.addAttribute("titulo",messageSource.getMessage("text.inicio.titulo", null, locale));
 		
+		for(GrantedAuthority a : SecurityContextHolder.getContext().getAuthentication().getAuthorities()) {
+			logger.info(a);
+		}
 		return "index";
 	}
 

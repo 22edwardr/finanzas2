@@ -5,11 +5,14 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.robayo.edward.finances.app.models.Categoria;
+import com.robayo.edward.finances.app.models.Usuario;
 
 @Repository
 public class CategoriaDao implements ICategoriaDao {
@@ -46,7 +49,7 @@ public class CategoriaDao implements ICategoriaDao {
 	public List<Categoria> consultaTodos(Long usuarioId, String likeText) {
 		String finalLikeText;
 		
-		finalLikeText = "%" + likeText != null ? likeText : "" + "%";
+		finalLikeText = "%" + (likeText != null ? likeText : "") + "%";
 		
 		return jdbcTemplate.query(
 				"select id, usuario_id, nomeclatura, tipo, estado, nombre,descripcion , color from categoria where usuario_id = ? and (nombre like ? or nomeclatura like ?)",
@@ -54,22 +57,44 @@ public class CategoriaDao implements ICategoriaDao {
 
 					@Override
 					public Categoria mapRow(ResultSet rs, int rowNum) throws SQLException {
-						Categoria categoria;
-
-						categoria = new Categoria();
-
-						categoria.setId(rs.getLong("id"));
-						categoria.setIdUsuario(rs.getLong("usuario_id"));
-						categoria.setNomeclatura(rs.getString("nomeclatura"));
-						categoria.setTipo(rs.getString("tipo"));
-						categoria.setEstado(rs.getBoolean("estado"));
-						categoria.setNombre(rs.getString("nombre"));
-						categoria.setDescripcion(rs.getString("descripcion"));
-						categoria.setColor(rs.getString("color"));
-
-						return categoria;
+						return getCategoria(rs);
 					}
 
 				});
+	}
+
+	@Override
+	public Categoria consultaUno(Long id) {
+		return jdbcTemplate.query("select id, usuario_id, nomeclatura, tipo, estado, nombre,descripcion , color from categoria where id = ?", new Object[] {id},
+				new ResultSetExtractor<Categoria>() {
+
+					@Override
+					public Categoria extractData(ResultSet rs) throws SQLException, DataAccessException {
+						if (rs.next()) {
+							return getCategoria(rs);
+						}
+
+						return null;
+
+					}
+				});
+
+	}
+	
+	private Categoria getCategoria(ResultSet rs) throws SQLException {
+		Categoria categoria;
+
+		categoria = new Categoria();
+		
+		categoria.setId(rs.getLong("id"));
+		categoria.setIdUsuario(rs.getLong("usuario_id"));
+		categoria.setNomeclatura(rs.getString("nomeclatura"));
+		categoria.setTipo(rs.getString("tipo"));
+		categoria.setEstado(rs.getBoolean("estado"));
+		categoria.setNombre(rs.getString("nombre"));
+		categoria.setDescripcion(rs.getString("descripcion"));
+		categoria.setColor(rs.getString("color"));
+
+		return categoria;
 	}
 }
