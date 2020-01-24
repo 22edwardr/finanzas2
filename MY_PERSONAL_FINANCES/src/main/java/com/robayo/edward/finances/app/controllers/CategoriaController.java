@@ -1,8 +1,9 @@
 package com.robayo.edward.finances.app.controllers;
 
-import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.robayo.edward.finances.app.models.Categoria;
@@ -32,7 +32,7 @@ import com.robayo.edward.finances.app.service.ICategoriaService;
 import com.robayo.edward.finances.app.utils.MessageType;
 
 @Secured("ROLE_USUARIO")
-@Controller()
+@Controller
 @RequestMapping("/categoria")
 @SessionAttributes("categoria")
 public class CategoriaController {
@@ -41,6 +41,19 @@ public class CategoriaController {
 	private MessageSource messageSource;
 	@Autowired
 	private ICategoriaService categoriaService;
+	
+	@ModelAttribute("tiposCategoria")
+	public Map<String,String> consultaTiposCategoria(Locale locale){
+		Map<String,String> tipos;
+		
+		tipos = new HashMap<>();
+		
+		tipos.put("C", messageSource.getMessage("text.categorias.credito",null,locale));
+		tipos.put("D", messageSource.getMessage("text.categorias.debito",null,locale));
+		
+		return tipos;
+		
+	}
 
 	@GetMapping("/")
 	public String getAll(@RequestParam(required = false, value = "likeText") String likeText, Model model,
@@ -59,11 +72,14 @@ public class CategoriaController {
 
 	@GetMapping({"/form","/form/{id}"})
 	public String getForm(@PathVariable(required = false, value = "id") Long id, Model model, Locale locale,
-			RedirectAttributes flash) {
+			RedirectAttributes flash,Authentication auth) {
 		Categoria categoria;
+		Long idUsuario;
+		
+		idUsuario = ((CustomUser)auth.getPrincipal()).getId();
 
 		if (id != null) {
-			categoria = categoriaService.consultaUno(id);
+			categoria = categoriaService.consultaUno(id,idUsuario);
 
 			if (categoria == null) {
 				flash.addFlashAttribute(MessageType.error.toString(),
@@ -76,25 +92,35 @@ public class CategoriaController {
 			model.addAttribute("titulo", messageSource.getMessage("text.categoria.editarCategoria", null, locale));
 		} else {
 			categoria = new Categoria();
-
+			categoria.setIdUsuario(idUsuario);
 			model.addAttribute("titulo", messageSource.getMessage("text.categoria.crearCategoria", null, locale));
 		}
+		
+		model.addAttribute("categoria",categoria);
 
 		return "categoria/form";
 	}
 
 	@GetMapping("/inactivarActivar/{id}")
 	public String getInactivarActivar(@PathVariable("id") Long id, Model model, Locale locale,
-			RedirectAttributes flash) {
+			RedirectAttributes flash,Authentication auth) {
+		Long idUsuario;
 		Categoria categoria;
+		
+		idUsuario = ((CustomUser)auth.getPrincipal()).getId();
 
-		categoria = categoriaService.consultaUno(id);
+		categoria = categoriaService.consultaUno(id,idUsuario);
 
 		if (categoria == null) {
 			flash.addFlashAttribute(MessageType.error.toString(),
 					messageSource.getMessage("text.categorias.noExisteCategoria", null, locale));
 		} else {
-			categoriaService.actualizarEstadoCategoria(id, !categoria.isEstado());
+			Categoria categoriaNuevoEstado;
+			
+			categoriaNuevoEstado = new Categoria();
+			categoriaNuevoEstado.setId(id);
+			categoriaNuevoEstado.setEstado(!categoria.isEstado());
+			categoriaService.actualizarEstado(categoriaNuevoEstado);
 
 			flash.addFlashAttribute(MessageType.success.toString(),
 					messageSource
@@ -127,10 +153,10 @@ public class CategoriaController {
 		String mensaje;
 
 		if (editar) {
-			categoriaService.actualizarCategoria(categoria);
+			categoriaService.actualizar(categoria);
 			mensaje = "text.categoria.editarExitoso";
 		} else {
-			categoriaService.crearCategoria(categoria);
+			categoriaService.crear(categoria);
 			mensaje = "text.categoria.crearExitoso";
 		}
 

@@ -12,7 +12,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.robayo.edward.finances.app.models.Categoria;
-import com.robayo.edward.finances.app.models.Usuario;
 
 @Repository
 public class CategoriaDao implements ICategoriaDao {
@@ -21,7 +20,7 @@ public class CategoriaDao implements ICategoriaDao {
 	private JdbcTemplate jdbcTemplate;
 
 	@Override
-	public void crearCategoria(Categoria categoria) {
+	public void crear(Categoria categoria) {
 		jdbcTemplate.update(
 				"insert into categoria (usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color)"
 						+ "values (?,?,?,?,?,?,?)",
@@ -30,7 +29,7 @@ public class CategoriaDao implements ICategoriaDao {
 	}
 
 	@Override
-	public void actualizarCategoria(Categoria categoria) {
+	public void actualizar(Categoria categoria) {
 		jdbcTemplate.update(
 				"update categoria set nomeclatura = ? , tipo = ? ,nombre = ?,descripcion = ?, color = ?"
 						+ " where id = ?",
@@ -40,8 +39,8 @@ public class CategoriaDao implements ICategoriaDao {
 	}
 
 	@Override
-	public void actualizarEstadoCategoria(Long id, boolean estado) {
-		jdbcTemplate.update("update categoria set estado = ?" + " where id = ?", new Object[] { estado, id });
+	public void actualizarEstado(Categoria categoria) {
+		jdbcTemplate.update("update categoria set estado = ? where id = ?", new Object[] { categoria.isEstado(),categoria.getId() });
 
 	}
 
@@ -64,8 +63,8 @@ public class CategoriaDao implements ICategoriaDao {
 	}
 
 	@Override
-	public Categoria consultaUno(Long id) {
-		return jdbcTemplate.query("select id, usuario_id, nomeclatura, tipo, estado, nombre,descripcion , color from categoria where id = ?", new Object[] {id},
+	public Categoria consultaUno(Long id,Long usuarioId) {
+		return jdbcTemplate.query("select id, usuario_id, nomeclatura, tipo, estado, nombre,descripcion , color from categoria where id = ? and usuario_id = ?", new Object[] {id,usuarioId},
 				new ResultSetExtractor<Categoria>() {
 
 					@Override

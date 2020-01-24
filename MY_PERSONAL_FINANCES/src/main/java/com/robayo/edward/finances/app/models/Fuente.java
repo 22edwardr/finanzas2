@@ -1,22 +1,17 @@
 package com.robayo.edward.finances.app.models;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class Categoria {
+public class Fuente {
 	private Long id;
 	private Long idUsuario;
 	@Size(max = 7)
 	private String color;
-	private String descripcion;
 	private String nombre;
 	@NotEmpty
 	@Size(min = 3, max = 5)
 	private String nomeclatura;
-	@NotEmpty
-	@Pattern(regexp = "[CD]")
-	private String tipo;
 	private boolean estado;
 
 	public boolean isEstado() {
@@ -51,28 +46,12 @@ public class Categoria {
 		this.nomeclatura = nomeclatura;
 	}
 
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
-
 	public String getNombre() {
 		return nombre;
 	}
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
 	}
 
 	public String getColor() {

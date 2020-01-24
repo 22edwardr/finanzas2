@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head">
+</head>
+<body>
+	<header th:replace="layout/layout :: header"></header>
+	<div class="container py-4">
+		<div class="card bg-light">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+				<h4 class="card-title">
+					<a class="btn btn-primary btn-xs" th:href="@{/fuente/form/}" th:text="#{text.fuente.crearFuente}">Crear
+						Fuente</a>
+				</h4>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th th:text="#{text.fuente.nomeclatura}">Nomeclatura</th>
+							<th th:text="#{text.fuente.estado}">Estado</th>
+							<th th:text="#{text.fuente.nombre}">Nombre</th>
+							<th th:text="#{text.fuente.editar}">Editar</th>
+							<th th:text="#{text.fuente.inactivarActivar}">Inactivar/Activar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="fuente : ${fuentes}">
+							<td th:text="${fuente.nomeclatura}"></td>
+							<td th:text="${fuente.estado} ?  #{text.fuente.activo} : #{text.fuente.inactivo}"></td>
+							<td th:text="${fuente.nombre}"></td>
+							<td><a class="btn btn-success btn-xs" th:href="@{'/fuente/form/' + ${fuente.id}}" th:text="#{text.fuente.editar}"></a></td>
+							<td><a th:href="@{/fuente/inactivarActivar/} + ${fuente.id}" th:text="${fuente.estado} ? #{text.fuente.inactivar} : #{text.fuente.activar}" class="btn btn-info btn-xs"></a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

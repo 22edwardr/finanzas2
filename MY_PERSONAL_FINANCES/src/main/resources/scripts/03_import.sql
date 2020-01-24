@@ -9,17 +9,17 @@ insert into rol(usuario_id,rol) values (1,'ROLE_USUARIO');
 insert into rol(usuario_id,rol) values (2,'ROLE_USUARIO');
 insert into rol(usuario_id,rol) values (2,'ROLE_ADMINISTRADOR');
 
-insert into categoria(id,usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color) values (1,1,'VIV','C',1,'Vivienda','Lo del arriendo','12345678');
-insert into categoria(id,usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color) values (2,1,'ALI','C',1,'Alimentacion','Mercado a la lata','FF002255');
-insert into categoria(id,usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color) values (3,1,'SUE','D',1,'Sueldo','Mi trabajito','AA669977');
-insert into categoria(id,usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color) values (4,2,'HOS','C',0,'Hospedaje',NULL,'12345678');
-insert into categoria(id,usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color) values (5,2,'ALI','C',1,'Alimentacion',NULL,'FF002255');
-insert into categoria(id,usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color) values (6,2,'TRA','D',1,'Trabajo',NULL,'CC998822');
+insert into categoria(id,usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color) values (1,1,'VIV','C',1,'Vivienda','Lo del arriendo','#345678');
+insert into categoria(id,usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color) values (2,1,'ALI','C',1,'Alimentacion','Mercado a la lata','#002255');
+insert into categoria(id,usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color) values (3,1,'SUE','D',1,'Sueldo','Mi trabajito','#669977');
+insert into categoria(id,usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color) values (4,2,'HOS','C',0,'Hospedaje',NULL,'#345678');
+insert into categoria(id,usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color) values (5,2,'ALI','C',1,'Alimentacion',NULL,'#002255');
+insert into categoria(id,usuario_id,nomeclatura,tipo,estado,nombre,descripcion,color) values (6,2,'TRA','D',1,'Trabajo',NULL,'#998822');
 
-insert into fuente(id,usuario_id,nomeclatura,estado,nombre,color) values (1,1,'CAH',1,'Cuenta de ahorros','12345678');
-insert into fuente(id,usuario_id,nomeclatura,estado,nombre,color) values (2,2,'CAM',1,'Caja menor','12345678');
-insert into fuente(id,usuario_id,nomeclatura,estado,nombre,color) values (3,2,'CDT',1,NULL,'FF002255');
-insert into fuente(id,usuario_id,nomeclatura,estado,nombre,color) values (4,2,'CAH',1,'Cuenta de ahorros','CC998822');
+insert into fuente(id,usuario_id,nomeclatura,estado,nombre,color) values (1,1,'CAH',1,'Cuenta de ahorros','#345678');
+insert into fuente(id,usuario_id,nomeclatura,estado,nombre,color) values (2,2,'CAM',1,'Caja menor','#345678');
+insert into fuente(id,usuario_id,nomeclatura,estado,nombre,color) values (3,2,'CDT',1,NULL,'#002255');
+insert into fuente(id,usuario_id,nomeclatura,estado,nombre,color) values (4,2,'CAH',1,'Cuenta de ahorros','#998822');
 
 insert into movimiento(usuario_id,fuente_id,categoria_id,valor,descripcion,fecha) values (1,1,2,9500,'Ejecutivo','2019-01-06');
 insert into movimiento(usuario_id,fuente_id,categoria_id,valor,descripcion,fecha) values (1,1,1,550000,'Arriendo','2019-01-15');

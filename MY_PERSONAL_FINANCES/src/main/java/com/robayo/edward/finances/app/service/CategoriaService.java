@@ -17,21 +17,21 @@ public class CategoriaService implements ICategoriaService {
 
 	@Override
 	@Transactional
-	public void crearCategoria(Categoria categoria) {
-		categoriaDao.crearCategoria(categoria);
+	public void crear(Categoria categoria) {
+		categoriaDao.crear(categoria);
 	}
 
 	@Override
 	@Transactional
-	public void actualizarCategoria(Categoria categoria) {
-		categoriaDao.actualizarCategoria(categoria);
+	public void actualizar(Categoria categoria) {
+		categoriaDao.actualizar(categoria);
 
 	}
 
 	@Override
 	@Transactional
-	public void actualizarEstadoCategoria(Long id, boolean estado) {
-		categoriaDao.actualizarEstadoCategoria(id, estado);
+	public void actualizarEstado(Categoria categoria) {
+		categoriaDao.actualizarEstado(categoria);
 	}
 
 	@Override
@@ -40,8 +40,8 @@ public class CategoriaService implements ICategoriaService {
 	}
 
 	@Override
-	public Categoria consultaUno(Long id) {
-		return categoriaDao.consultaUno(id);
+	public Categoria consultaUno(Long id,Long usuarioId) {
+		return categoriaDao.consultaUno(id,usuarioId);
 	}
 
 }

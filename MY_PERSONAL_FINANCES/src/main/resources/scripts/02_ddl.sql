@@ -62,7 +62,7 @@ create table fuente(
 	nomeclatura VARCHAR(5)		NOT NULL,
 	estado		BIT(1)			NOT NULL,
 	nombre		VARCHAR(100)	NULL,
-	color		VARCHAR(8)		NULL,
+	color		VARCHAR(7)		NULL,
 	FOREIGN KEY fuente_usuario_fk(usuario_id) REFERENCES usuario(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	UNIQUE usuario_nomeclatura_u(usuario_id,nomeclatura)
 );
@@ -86,7 +86,7 @@ create table categoria(
 	estado		BIT(1)			NOT NULL,
 	nombre		VARCHAR(100)	NULL,
 	descripcion	VARCHAR(100)	NULL,
-	color		VARCHAR(8)		NULL,
+	color		VARCHAR(7)		NULL,
 	FOREIGN KEY categoria_usuario_fk(usuario_id) REFERENCES usuario(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	UNIQUE usuario_nomeclatura_u(usuario_id,nomeclatura),
 	CONSTRAINT tipo_categoria_ck CHECK (tipo in('D','C'))

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head">
+</head>
+<body>
+	<header th:replace="layout/layout :: header"></header>
+	<div class="container py-4">
+		<div class="card bg-light">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+				<h4 class="card-title">
+					<a class="btn btn-primary btn-xs" th:href="@{/categoria/form/}" th:text="#{text.categoria.crearCategoria}">Crear
+						Categoria</a>
+				</h4>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th th:text="#{text.categorias.nomeclatura}">Nomeclatura</th>
+							<th th:text="#{text.categorias.tipo}">Tipo</th>
+							<th th:text="#{text.categorias.estado}">Estado</th>
+							<th th:text="#{text.categorias.nombre}">Nombre</th>
+							<th th:text="#{text.categorias.descripcion}">Descripcion</th>
+							<th th:text="#{text.categorias.editar}">Editar</th>
+							<th th:text="#{text.categorias.inactivarActivar}">Inactivar/Activar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="categoria : ${categorias}">
+							<td th:text="${categoria.nomeclatura}"></td>
+							<td th:text="${categoria.tipo == 'C'} ?  #{text.categorias.credito} : #{text.categorias.debito}"></td>
+							<td th:text="${categoria.estado} ?  #{text.categorias.activo} : #{text.categorias.inactivo}"></td>
+							<td th:text="${categoria.nombre}"></td>
+							<td th:text="${categoria.descripcion}"></td>
+							<td><a class="btn btn-success btn-xs" th:href="@{'/categoria/form/' + ${categoria.id}}" th:text="#{text.categorias.editar}"></a></td>
+							<td><a th:href="@{/categoria/inactivarActivar/} + ${categoria.id}" th:text="${categoria.estado} ? #{text.categorias.inactivar} : #{text.categorias.activar}" class="btn btn-info btn-xs"></a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>
