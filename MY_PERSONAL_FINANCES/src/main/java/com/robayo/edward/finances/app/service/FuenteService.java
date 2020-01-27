@@ -1,6 +1,7 @@
 package com.robayo.edward.finances.app.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,18 @@ public class FuenteService implements IFuenteService {
 	@Override
 	public List<Fuente> consultaTodos(Long usuarioId, String likeText) {
 		return fuenteDao.consultaTodos(usuarioId, likeText);
+	}
+	
+	@Override
+	public List<Fuente> consultaTodosActivos(Long usuarioId) {
+		List<Fuente> fuentes;
+		
+		fuentes = fuenteDao.consultaTodos(usuarioId, null);
+		
+		if(fuentes != null)
+			fuentes = fuentes.stream().filter(element -> element.isEstado()).collect(Collectors.toList());
+		
+		return fuentes;
 	}
 
 	@Override

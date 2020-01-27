@@ -14,4 +14,6 @@ public interface IFuenteService {
 	public List<Fuente> consultaTodos(Long usuarioId, String likeText);
 
 	public Fuente consultaUno(Long id, Long usuarioId);
+
+	public List<Fuente> consultaTodosActivos(Long usuarioId);
 }

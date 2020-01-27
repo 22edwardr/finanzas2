@@ -28,18 +28,23 @@
 						id="dropdownMenuParametros" data-toggle="dropdown"
 						aria-haspopup="true" aria-expanded="false"><span
 							th:text="#{text.menu.parametros}">Parametros</span></a>
-						<div class="dropdown-menu" aria-labelledby="dropdownMenuParametros">
+						<div class="dropdown-menu"
+							aria-labelledby="dropdownMenuParametros">
 							<a class="dropdown-item" th:href="@{/categoria/}"
 								th:text="#{text.menu.parametros.categorias}">Categorias <span
-									class="sr-only">(Categorias)</span>
-							</a>
-							<a class="dropdown-item" th:href="@{/fuente/}"
+								class="sr-only">(Categorias)</span>
+							</a> <a class="dropdown-item" th:href="@{/fuente/}"
 								th:text="#{text.menu.parametros.fuentes}">Fuentes <span
-									class="sr-only">(Fuentes)</span>
+								class="sr-only">(Fuentes)</span>
 							</a>
 						</div></li>
-						
-						
+					<li class="nav-item" sec:authorize="hasRole('ROLE_USUARIO')"><a
+						class="nav-link" th:href="@{/movimiento/}"
+						th:text="#{text.menu.movimientos}">Movimientos <span
+							class="sr-only">(Movimientos)</span>
+					</a></li>
+
+
 				</ul>
 
 				<ul class="navbar-nav">

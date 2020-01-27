@@ -14,4 +14,6 @@ public interface ICategoriaService {
 	public List<Categoria> consultaTodos(Long usuarioId, String likeText);
 	
 	public Categoria consultaUno(Long id,Long usuarioId);
+
+	public List<Categoria> consultaTodosActivos(Long usuarioId);
 }

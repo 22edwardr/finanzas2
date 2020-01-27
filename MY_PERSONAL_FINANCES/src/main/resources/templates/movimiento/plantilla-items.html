@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<div th:fragment="itemsEditar" class="form-group row"
+		th:id="'movimientos' + ${stat.index}"
+		th:each="row, stat : ${movimientoForm.movimientos}">
+		<div class="col-sm-2">
+			<input type="date" th:field="*{movimientos[__${stat.index}__].fecha}"
+				class="form-control" th:errorClass="'form-control alert-danger'" />
+		</div>
+		<div class="col-sm-2">
+			<input type="number"
+				th:field="*{movimientos[__${stat.index}__].valor}"
+				class="form-control" th:errorClass="'form-control alert-danger'" />
+		</div>
+		<div class="col-sm-2">
+			<input type="text"
+				th:field="*{movimientos[__${stat.index}__].descripcion}"
+				class="form-control" th:errorClass="'form-control alert-danger'" />
+		</div>
+		<div class="col-sm-2">
+			<select th:field="*{movimientos[__${stat.index}__].idFuente}"
+				class="form-control" th:errorClass="'form-control alert-danger'">
+				<option th:each="entry : ${fuentes.entrySet()}"
+					th:value="${entry.key}" th:utext="${entry.value}"></option>
+			</select>
+		</div>
+		<div class="col-sm-2">
+			<select th:field="*{movimientos[__${stat.index}__].idCategoria}"
+				class="form-control" th:errorClass="'form-control alert-danger'">
+				<option th:each="entry : ${categorias.entrySet()}"
+					th:value="${entry.key}" th:utext="${entry.value}"></option>
+			</select>
+		</div>
+	</div>
+
+	<div th:fragment="itemsAgregar" class="d-none">
+		<div id="movimientosFila">
+			<div class="form-group row" id="movimientoFila_{FILA}">
+				<div class="col-sm-2">
+					<input type="date" class="form-control"
+						id="movimientos{FILA}.fecha" name="movimientos[{FILA}].fecha" />
+					<input type="hidden" id="movimientos{FILA}.id"
+						name="movimientos[{FILA}].fecha" value="{FILA}" />
+				</div>
+				<div class="col-sm-2">
+					<input type="number" class="form-control"
+						id="movimientos{FILA}.valor" name="movimientos[{FILA}].valor" />
+				</div>
+				<div class="col-sm-2">
+					<input type="text" class="form-control"
+						id="movimientos{FILA}.descripcion"
+						name="movimientos[{FILA}].descripcion" />
+				</div>
+				<div class="col-sm-2">
+					<select class="form-control" id="movimientos{FILA}.idFuente"
+						name="movimientos[{FILA}].idFuente">
+						<option th:each="entry : ${fuentes.entrySet()}"
+							th:value="${entry.key}" th:utext="${entry.value}"></option>
+					</select>
+				</div>
+				<div class="col-sm-2">
+					<select class="form-control" id="movimientos{FILA}.idCategoria"
+						name="movimientos[{FILA}].idCategoria">
+						<option th:each="entry : ${categorias.entrySet()}"
+							th:value="${entry.key}" th:utext="${entry.value}"></option>
+					</select>
+				</div>
+				<div class="col-sm-2">
+					<a href="#" class="btn btn-danger btn-xs"
+						onclick="itemsHelper.eliminarLinea({FILA});">X</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</body>
+</html>
