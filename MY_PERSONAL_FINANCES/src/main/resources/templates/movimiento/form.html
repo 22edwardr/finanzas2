@@ -14,79 +14,165 @@
 						<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
 					</ul>
 				</div>
+				<div id="itemsEditarContainer">
+					<div th:fragment="itemsEditar">
+						<form th:action="@{/movimiento/form}"
+							th:object="${movimientoForm}" method="POST"
+							enctype="multipart/form-data">
 
-				<form th:action="@{/movimiento/form}" th:object="${movimientoForm}"
-					method="POST" enctype="multipart/form-data">
-
-					
-					<div id="itemsPlantilla" th:replace="movimiento/plantilla-items :: itemsAgregar"></div>
-					<div id="itemsMovimiento"></div>
-					
-
-					<div class="form-group row">
-						<div class="col-sm-8">
-							<input type="submit" th:value="#{text.register.enviar}"
-								class="form-control btn btn-secondary" />
-						</div>
-						<div class="col-sm-2">
-							<a href="#" class="btn btn-primary btn-xs" onclick="itemsHelper.agregarLinea();">+</a>
-						</div>
+							<div class="form-group row movimientoFila"
+								th:id="'movimientoFila_' + ${stat.index}"
+								th:each="row, stat : ${movimientoForm.movimientos}">
+								<div class="col-sm-2">
+									<input type="date"
+										th:field="*{movimientos[__${stat.index}__].fecha}"
+										class="form-control"
+										th:errorClass="'form-control alert-danger'" />
+									<input type="hidden" th:id="movimientosDC + __${stat.index}__"
+										th:name="movimientosDC + __${stat.index}__" value="{DC}" />
+								</div>
+								<div class="col-sm-2">
+									<select th:field="*{movimientos[__${stat.index}__].idFuente}"
+										class="form-control"
+										th:errorClass="'form-control alert-danger'">
+										<option th:each="entry : ${fuentes.entrySet()}"
+											th:value="${entry.key}" th:utext="${entry.value}"></option>
+									</select>
+								</div>
+								<div class="col-sm-2">
+									<select
+										th:field="*{movimientos[__${stat.index}__].idCategoria}"
+										class="form-control idCategoria"
+										th:errorClass="'form-control alert-danger'"
+										th:onchange="'itemsHelper.cambioCategoria(' + *{movimientos[__${stat.index}__].id} + ');'">
+										<option th:each="entry : ${categorias.entrySet()}"
+											th:value="${entry.key}" th:utext="${entry.value}"></option>
+									</select>
+								</div>
+								<div class="col-sm-2">
+									<input type="text"
+										th:field="*{movimientos[__${stat.index}__].descripcion}"
+										class="form-control"
+										th:errorClass="'form-control alert-danger'" />
+								</div>
+								<div class="col-sm-2">
+									<input type="number"
+										th:field="*{movimientos[__${stat.index}__].valor}"
+										th:onkeydown="'itemsHelper.calculoTotal();'"
+										th:onchange="'itemsHelper.calculoTotal();'"
+										class="form-control valor"
+										th:errorClass="'form-control alert-danger'" />
+								</div>
+								<div class="col-sm-2">
+									<a href="#" class="btn btn-danger btn-xs"
+										th:onclick="'itemsHelper.eliminarLinea(' + *{movimientos[__${stat.index}__].id} + ');'">X</a>
+								</div>
+							</div>
+							<input type="hidden" name="idEliminar" id="idEliminar"/>
+							<div class="form-group row">
+								<div class="col-sm-8">
+									<input type="submit" th:value="#{text.register.enviar}"
+										class="form-control btn btn-secondary" />
+								</div>
+								<div class="col-sm-2">
+									<input type="number"
+										name ="total" id ="total" disabled="disabled"
+										class="form-control"/>
+								</div>
+								<div class="col-sm-2">
+									<a href="#" class="btn btn-primary btn-xs"
+										onclick="itemsHelper.agregarLinea();">+</a>
+								</div>
+							</div>
+						</form>
 					</div>
-
-
-				</form>
+				</div>
 			</div>
 		</div>
 	</div>
-	<footer th:replace="layout/layout :: footer"></footer>pass array of model post spring mvc thymeleaf
+	<footer th:replace="layout/layout :: footer"></footer>
 	<script type="text/javascript">
-		$(document).ready(
-				function(){
-					
-					
-					
-					$("form").submit(function(){
-						$("#itemsPlantilla").remove();
-						
-						return;
-					});
-				});
+		$(document).ready(function() {
+			itemsHelper.refrescarCampos();
+		});
+		
 		
 		var itemsHelper = {
-				agregarLinea : function(){
-					var linea = $("#movimientosFila").html();
-					var fila = -1;
-					$("div[id^='movimientoFila_']").each(function(){
-						var filaActual = $(this).attr("id").replace("movimientoFila_","");
-						
-						if(filaActual > fila)
-							fila = filaActual;
-					});
-					
-					fila++;
-					linea = linea.replace(/{FILA}/g,fila);
-					
-					$("#itemsMovimiento").append(linea);
-					
-					return resultado;
-				},
+			agregarLinea : function() {
+				var json = $("form").serialize();
+
+				$.ajax({
+					url : "/movimiento/agregarLinea",
+					data : json,
+					type : "POST",
+
+					success : function(data) {
+						$("#itemsEditarContainer").html(data);
+						itemsHelper.refrescarCampos();
+					},
+					error: function(jqXHR,textStatus,error){
+						console.log("Error llamando a /movimiento/agregarLinea jqXHR[" + jqXHR + "]textStatus["+ textStatus + "]error[" + error + "]");
+					}
+				});
+			},
+
+			eliminarLinea : function(id) {
 				
-				eliminarLineaFactura: function(id){
-					$("#row_" + id).remove();
-					this.calcularGranTotal();
-				},
+				$("#idEliminar").attr("value",id);
+				var json = $("form").serialize();
+
+				$.ajax({
+					url : "/movimiento/quitarLinea",
+					data : json,
+					type : "POST",
+
+					success : function(data) {
+						$("#itemsEditarContainer").html(data);
+						itemsHelper.refrescarCampos();
+					},
+					error: function(jqXHR,textStatus,error){
+						console.log("Error llamando a /movimiento/quitarLinea jqXHR[" + jqXHR + "]textStatus["+ textStatus + "]error[" + error + "]");
+					}
+				});
+			},
+			
+			refrescarCampos : function(){
+				$(".movimientoFila").each(function(){
+					var id = $(this).attr("id").replace("movimientoFila_","");
+					itemsHelper.cambioCategoria(id);
+				}) ;
+			},
+			
+			cambioCategoria: function(id){
+				var categoriaId = $("#movimientos" + id + "\\.idCategoria").val();
+				$.ajax({
+					url : "/movimiento/tipoCategoria/" + categoriaId,
+					dataType : 'text',
+					type : 'GET',
+					success : function(data) {
+						$("#movimientosDC" + id).attr("value",data);
+						itemsHelper.calculoTotal();
+					},
+					error: function(jqXHR,textStatus,error){
+						console.log("Error llamando a /movimiento/tipoCategoria/" + categoriaId + " jqXHR[" + jqXHR + "]textStatus["+ textStatus + "]error[" + error + "]");
+					}
+				});
 				
-				calcularGranTotal: function(){
-					var total = 0;
-					
-					$('span[id^="total_importe_"]').each(function(){
-						total += parseInt($(this).html());
-					});
-					
-					$("#gran_total").html(total);
-				}
-		}
-	
+			},
+			
+			calculoTotal: function (){
+				var total = 0;
+				$(".valor").each(function(){
+					var id= $(this).attr("id").replace("movimientos","").replace(".valor","");
+					console.log("Tipo " + $("#movimientosDC" + id).val());
+					console.log("Valor " + $(this).val());
+					total += ($("#movimientosDC" + id).val() == 'C' ? -1 : 1) * $(this).val();
+				});
+				
+				$("#total").val(total);
+			}
+
+		};
 	</script>
 </body>
 </html>

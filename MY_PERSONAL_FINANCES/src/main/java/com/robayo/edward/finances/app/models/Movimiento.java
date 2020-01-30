@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -13,14 +12,14 @@ public class Movimiento implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long id;
 	private Long idUsuario;
-	@NotNull
+	@NotNull(message = "{NotNull.movimiento.idFuente}")
 	private Long idFuente;
-	@NotNull
+	@NotNull(message = "{NotNull.movimiento.idCategoria}")
 	private Long idCategoria;
-	@NotNull
+	@NotNull(message = "{NotNull.movimiento.valor}")
 	private Double valor;
 	private String descripcion;
-	@NotNull
+	@NotNull(message = "{NotNull.movimiento.fecha}")
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date fecha;
 

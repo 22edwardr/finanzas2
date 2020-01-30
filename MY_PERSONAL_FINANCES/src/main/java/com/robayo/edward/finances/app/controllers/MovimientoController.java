@@ -1,11 +1,11 @@
 package com.robayo.edward.finances.app.controllers;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -20,8 +20,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -50,24 +53,6 @@ public class MovimientoController {
 	private ICategoriaService categoriaService;
 	@Autowired
 	private IFuenteService fuenteService;
-	
-	private Movimiento addDummyData(int iteration) {
-		Movimiento movimiento;
-		
-		movimiento = new Movimiento();
-		
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.DAY_OF_MONTH, -iteration);
-		
-		movimiento.setFecha(cal.getTime());
-		movimiento.setDescripcion("Descripcion "+ iteration);
-		movimiento.setValor((double) (2000 * iteration));
-		movimiento.setIdFuente(1L);
-		movimiento.setIdCategoria(2L);
-		
-		return movimiento;
-		
-	}
 	
 	@ModelAttribute("categorias")
 	public Map<Long,String> consultaCategorias(Authentication auth){
@@ -130,6 +115,49 @@ public class MovimientoController {
 		
 		return "movimiento/form";
 	}
+	
+	@GetMapping(value = "/tipoCategoria/{idCategoria}", produces = { "plain/text" })
+	public @ResponseBody String getTipoCategoria(Model model, @PathVariable Long idCategoria,Authentication auth) {
+		Long usuarioId; 
+		Categoria categoria;
+		
+		usuarioId = ((CustomUser)auth.getPrincipal()).getId();
+		categoria = categoriaService.consultaUno(idCategoria, usuarioId);
+		
+		return categoria != null ? categoria.getTipo() : "D";
+	}
+	
+	@PostMapping("/agregarLinea")
+	public String postAgregarLinea(@ModelAttribute MovimientoForm movimientoForm,Model model) {
+		Long idMax;
+		Movimiento movimiento;
+		
+		idMax=-1L;
+		movimiento = new Movimiento();
+		
+		for (Movimiento actual : movimientoForm.getMovimientos()) {
+			if(actual.getId() > idMax)
+				idMax = actual.getId();
+		}
+		
+		movimiento.setId(++idMax);
+		
+		movimientoForm.getMovimientos().add(movimiento);
+		model.addAttribute("movimientoForm",movimientoForm);
+		
+		return "movimiento/form :: itemsEditar";
+	}
+	
+	@PostMapping("/quitarLinea")
+	public String postQuitarLinea(@ModelAttribute MovimientoForm movimientoForm,@RequestParam Long idEliminar, Model model) {
+		
+		List<Movimiento> movimientos =movimientoForm.getMovimientos().stream().filter(x -> x.getId().compareTo(idEliminar) != 0).collect(Collectors.toList()); 
+		movimientoForm.setMovimientos(movimientos);
+		model.addAttribute("movimientoForm",movimientoForm);
+		
+		return "movimiento/form :: itemsEditar";
+	}
+	
 	
 	@PostMapping("/form")
 	public String postForm(@Valid @ModelAttribute("movimientoForm") MovimientoForm movimientoForm,BindingResult result,Model model,RedirectAttributes flash, Locale locale, SessionStatus status, Authentication auth) {
