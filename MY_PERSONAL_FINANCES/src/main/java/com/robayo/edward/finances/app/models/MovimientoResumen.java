@@ -11,15 +11,25 @@ public class MovimientoResumen implements Serializable{
 	private String fuente;
 	private String descripcion;
 	private Double valor;
+	private Boolean debito;
 	
 	public MovimientoResumen() {}
 	
-	public MovimientoResumen(LocalDate fecha, String categoria, String fuente, String descripcion, Double valor) {
+	public MovimientoResumen(LocalDate fecha, String categoria, String fuente, String descripcion, Double valor,Boolean debito) {
 		this.fecha = fecha;
 		this.categoria = categoria;
 		this.fuente = fuente;
 		this.descripcion = descripcion;
 		this.valor = valor;
+		this.debito = debito;
+	}
+	
+	public Boolean getDebito() {
+		return debito;
+	}
+
+	public void setDebito(Boolean debito) {
+		this.debito = debito;
 	}
 	public LocalDate getFecha() {
 		return fecha;

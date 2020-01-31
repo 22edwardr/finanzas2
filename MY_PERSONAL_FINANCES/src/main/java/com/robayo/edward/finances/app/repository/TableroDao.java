@@ -23,9 +23,9 @@ public class TableroDao implements ITableroDao {
 	public List<MovimientoResumen> consultaMovimientoResumen(LocalDate fechaInicial, LocalDate fechaFinal, Long idCategoria,
 			Long idFuente, Long idUsuario) {
 		return jdbcTemplate.query(
-				"select m.fecha,c.nomeclatura categoria,c.nombre categoriaNom,f.nomeclatura fuente,f.nombre fuenteNom, m.descripcion,m.valor from movimiento m join categoria c on m.categoria_id = c.id join fuente f on m.fuente_id = f.id " 
+				"select m.fecha,c.nomeclatura categoria,c.nombre categoriaNom,f.nomeclatura fuente,f.nombre fuenteNom, m.descripcion,m.valor, case c.tipo when 'D' then 1 else 0 end esDebito from movimiento m join categoria c on m.categoria_id = c.id join fuente f on m.fuente_id = f.id " 
 				+ "	where m.fecha >= ifnull(?,m.fecha) and m.fecha <= ifnull(?,m.fecha) " 
-				+ "	and m.usuario_id = ? and m.categoria_id = ifnull(?,m.categoria_id) and m.fuente_id = ifnull(?,m.fuente_id)",
+				+ "	and m.usuario_id = ? and m.categoria_id = ifnull(?,m.categoria_id) and m.fuente_id = ifnull(?,m.fuente_id) order by m.fecha",
 				new Object[] { fechaInicial , fechaFinal, idUsuario, idCategoria,idFuente}, new RowMapper<MovimientoResumen>() {
 
 					@Override
@@ -37,7 +37,7 @@ public class TableroDao implements ITableroDao {
 						categoria = categoria != null ? rs.getString("categoria") + " - " + categoria : rs.getString("categoria");
 						fuente = fuente != null ? rs.getString("fuente") + " - " + fuente : rs.getString("fuente");
 						
-						return new MovimientoResumen(fecha,categoria,fuente,rs.getString("descripcion"),rs.getDouble("valor"));
+						return new MovimientoResumen(fecha,categoria,fuente,rs.getString("descripcion"),rs.getDouble("valor"),rs.getBoolean("esDebito"));
 					}
 
 				});
@@ -47,7 +47,7 @@ public class TableroDao implements ITableroDao {
 	public List<FuenteResumen> consultaFuenteResumen(LocalDate fechaInicial, LocalDate fechaFinal, Long idCategoria,
 			Long idFuente, Long idUsuario) {
 		return jdbcTemplate.query(
-				"select f.nomeclatura, f.nombre, sum(case c.tipo when 'D' then m.valor else 0 end) ingresos, " 
+				"select f.nomeclatura fuenteNom, f.nombre fuente, sum(case c.tipo when 'D' then m.valor else 0 end) ingresos, " 
 				+ "	sum(case c.tipo when 'C' then m.valor else 0 end) egresos   " 
 				+ "	from movimiento m join categoria c on m.categoria_id = c.id " 
 				+ "	join fuente f on m.fuente_id = f.id " 

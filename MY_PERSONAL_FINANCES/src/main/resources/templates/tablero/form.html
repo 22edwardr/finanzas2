@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head">
+</head>
+<body>
+	<header th:replace="layout/layout :: header"></header>
+	<div class="container py-4">
+		<div class="card bg-light">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+				<div th:object="${tableroForm}" th:remove="tag">
+					<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+						<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+					</ul>
+				</div>
+
+				<form th:action="@{/tablero/form}" th:object="${tableroForm}"
+					method="POST" enctype="multipart/form-data">
+					<div class="form-group row">
+						<div class="col-sm-4">
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<select th:field="*{tipoConsulta}" class="form-control"
+										th:errorClass="'form-control alert-danger'">
+										<option value="1" th:text="#{text.tablero.todo}">
+										<option value="2" th:text="#{text.tablero.mes}">
+										<option value="3" th:text="#{text.tablero.ano}">
+									</select>
+								</div>
+								<input type="date" th:field="*{fecha}" class="form-control"
+									th:errorClass="'form-control alert-danger'" />
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<select th:field="*{idFuente}" class="form-control"
+								th:errorClass="'form-control alert-danger'">
+								<option th:text="#{text.tablero.seleccioneFuente}" th:value="''"></option>
+								<option th:each="entry : ${fuentes.entrySet()}"
+									th:value="${entry.key}" th:utext="${entry.value}"></option>
+							</select>
+						</div>
+						<div class="col-sm-3">
+							<select th:field="*{idCategoria}" class="form-control"
+								th:errorClass="'form-control alert-danger'">
+								<option th:text="#{text.tablero.seleccioneCategoria}"
+									th:value="''"></option>
+								<option th:each="entry : ${categorias.entrySet()}"
+									th:value="${entry.key}" th:utext="${entry.value}"></option>
+							</select>
+						</div>
+						<div class="col-sm-2">
+							<input type="submit" th:value="#{text.register.enviar}"
+								class="form-control btn btn-secondary" />
+						</div>
+					</div>
+				</form>
+
+				<div th:if="${tableroForm.movimientoResumen}"
+					th:object="${tableroForm}">
+					<div class="jumbotron jumbotron-fluid">
+						<div class="container">
+							<h1 class="display-4" align="center"
+								th:text="'$ ' + *{valorTotal}"></h1>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-6 col-sm-12" id="graficoAhorros"></div>
+						<div class="col-lg-6 col-sm-12" id="graficoCategorias"
+							style="height: 30em;"></div>
+					</div>
+					
+					<table class="table table-striped">
+					<thead>
+						<tr>
+							<th th:text="#{text.tablero.nombre}">Nombre</th>
+							<th th:text="#{text.tablero.ingresos}">Ingresos</th>
+							<th th:text="#{text.tablero.egresos}">Egresos</th>
+							<th th:text="#{text.tablero.total}">Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="fuente : *{fuenteResumen}">
+							<td th:text="${fuente.nombre}"></td>
+							<td th:text="${fuente.ingresos}"></td>
+							<td th:text="${fuente.egresos}"></td>
+							<td th:text="${fuente.ingresos} - ${fuente.egresos}"></td>
+						</tr>
+					</tbody>
+				</table>
+				
+					<table class="table table-striped">
+					<thead>
+						<tr>
+							<th th:text="#{text.tablero.fecha}">Fecha</th>
+							<th th:text="#{text.tablero.categoria}">Categoria</th>
+							<th th:text="#{text.tablero.fuente}">Fuente</th>
+							<th th:text="#{text.tablero.descripcion}">Descripcion</th>
+							<th th:text="#{text.tablero.valor}">Valor</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="movimiento : *{movimientoResumen}">
+							<td th:text="${movimiento.fecha}"></td>
+							<td th:text="${movimiento.categoria}"></td>
+							<td th:text="${movimiento.fuente}"></td>
+							<td th:text="${movimiento.descripcion}"></td>
+							<td th:text="${movimiento.valor}"></td>
+						</tr>
+					</tbody>
+				</table>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="layout/layout :: footer"></footer>
+	<script th:src="@{/js/canvasjs.min.js}"></script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+
+		$(document).ready(function() {
+			/*[# th:if="${tableroForm.graficoCategorias != null}"]*/
+			graficoCategorias();
+
+			/*[/]*/
+			/*[# th:if="${tableroForm.graficoAhorros != null}"]*/
+
+			graficoAhorros();
+
+			/*[/]*/
+		});
+
+		function graficoCategorias() {
+			var dps = [ [] ];
+			var chart = new CanvasJS.Chart(
+					"graficoCategorias",
+					{
+						theme : "light2",
+						exportEnabled : true,
+						animationEnabled : true,
+						title : {
+							text : /*[[#{text.tablero.graficoCategorias.titulo}]]*/"Categorias"
+						},
+						data : [ {
+							type : "pie",
+							showInLegend : "true",
+							legendText : "{label}",
+							yValueFormatString : "\"$\"###,###.##",
+							indexLabelFontSize : 16,
+							indexLabel : "{label} - {y}",
+							dataPoints : dps[0]
+						} ]
+					});
+
+			var yValue;
+			var label;
+
+			/*[# th:each="dataPoints, stat : ${tableroForm.graficoCategorias} "]*/
+			/*[# th:each="point : ${dataPoints} "]*/
+			yValue = parseFloat(/*[[${point.y}]]*/0);
+			label = /*[[${point.label}]]*/"";
+			dps[parseInt(/*[[${stat.index}]]*/0)].push({
+				label : label,
+				y : yValue,
+			});
+			/*[/]*/
+			/*[/]*/
+
+			chart.render();
+
+		}
+
+		function graficoAhorros() {
+			var dps = [ [] ];
+			var chart = new CanvasJS.Chart(
+					"graficoAhorros",
+					{
+						theme : "light2", // "light1", "dark1", "dark2"
+						animationEnabled : true,
+						title : {
+							text : /*[[#{text.tablero.graficoAhorros.titulo}]]*/"Ahorros"
+						},
+						axisX : {
+							valueFormatString : /*[[${tableroForm.tipoConsulta == 2 ? 'DD MMM YY' : 'MMM YY'}]]*/"MMM YY"
+						},
+						axisY : {
+							suffix : " K"
+						},
+						data : [ {
+							type : "line",
+							xValueType : "dateTime",
+							xValueFormatString : /*[[${tableroForm.tipoConsulta == 2 ? 'DD MMM YY' : 'MMM YY'}]]*/"MMM YY",
+							yValueFormatString : "###,###.##",
+							dataPoints : dps[0]
+						} ]
+					});
+
+			var xValue;
+			var yValue;
+
+			/*[# th:each="dataPoints, stat : ${tableroForm.graficoAhorros} "]*/
+			/*[# th:each="point : ${dataPoints} "]*/
+			xValue = parseInt(/*[[${point.x}]]*/0);
+			yValue = parseFloat(/*[[${point.y}]]*/0);
+			dps[parseInt(/*[[${stat.index}]]*/0)].push({
+				x : xValue,
+				y : yValue
+			});
+			/*[/]*/
+			/*[/]*/
+
+			chart.render();
+		}
+
+		/*]]>*/
+	</script>
+</body>
+</html>
+<!-- https://stackoverflow.com/questions/41352424/thymeleaf-foreach-loop-in-javascript
+ https://stackoverflow.com/questions/31771821/thymeleaf-how-to-add-conditional-block-in-javascript -->
