@@ -1,15 +1,13 @@
 package com.robayo.edward.finances.app.service;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.Month;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -86,18 +84,11 @@ public class TableroService implements ITableroService {
 
 	}
 
-	private List<List<Map<Object, Object>>> getGraficoCategorias(List<MovimientoResumen> movimientoResumen) {
-		List<List<Map<Object, Object>>> list;
-		List<Map<Object, Object>> data;
+	private Map<String, Double> getGraficoCategorias(List<MovimientoResumen> movimientoResumen) {
 
-		list = new ArrayList<>();
-		data = new ArrayList<>();
-
-		if (movimientoResumen != null) {
-
+		if (movimientoResumen != null && !movimientoResumen.isEmpty()) {
 			Map<String, Double> categorias;
 			categorias = new HashMap<>();
-
 			movimientoResumen.forEach(c -> {
 				if (!c.getDebito()) {
 					Double valor;
@@ -112,80 +103,46 @@ public class TableroService implements ITableroService {
 
 			});
 
-			for (Map.Entry<String, Double> categoria : categorias.entrySet()) {
-				Map<Object, Object> punto;
-				punto = new HashMap<>();
-
-				punto.put("label", categoria.getKey());
-				punto.put("y", categoria.getValue());
-
-				data.add(punto);
-			}
+			return categorias;
 		}
 
-		if (!data.isEmpty())
-			list.add(data);
-		else
-			list = null;
-
-		return list;
+		return null;
 
 	}
 
-	private List<List<Map<Object, Object>>> getGraficoAhorros(List<MovimientoResumen> movimientoResumen,
-			Integer tipoConsulta) {
-		List<List<Map<Object, Object>>> list;
-		List<Map<Object, Object>> data;
-
-		list = new ArrayList<>();
-		data = new ArrayList<>();
-
+	private Map<String, Double> getGraficoAhorros(List<MovimientoResumen> movimientoResumen, Integer tipoConsulta) {
 		if (movimientoResumen != null) {
-
-			Map<LocalDate, Double> fechas;
-			fechas = new HashMap<>();
+			Map<String, Double> fechas;
+			fechas = new TreeMap<>();
 
 			movimientoResumen.forEach(c -> {
 				LocalDate fecha;
+				String fechaText;
 				Double valorMovimiento;
 				Double valor;
 
 				if (tipoConsulta == 2) {
 					fecha = c.getFecha();
+					fechaText = fecha.format(DateTimeFormatter.ofPattern("dd"));
 				} else {
 					fecha = LocalDate.of(c.getFecha().get(ChronoField.YEAR), c.getFecha().getMonth(), 1);
+					fechaText = fecha.format(DateTimeFormatter.ofPattern("yyyy MMMM"));
 				}
-				
+
 				valorMovimiento = c.getValor() * (c.getDebito() ? 1 : -1);
-				valor = fechas.putIfAbsent(fecha, valorMovimiento);
+				valor = fechas.putIfAbsent(fechaText, valorMovimiento);
 
 				if (valor != null) {
 					valor = valor + valorMovimiento;
-					fechas.put(fecha, valor);
+					fechas.put(fechaText, valor);
 				}
-				
-				System.out.println(fechas);
 
 			});
-
-			for (Map.Entry<LocalDate, Double> fecha : fechas.entrySet()) {
-				Map<Object, Object> punto;
-				ZonedDateTime zdt = ZonedDateTime.of(fecha.getKey(), LocalTime.of(0, 0), ZoneId.systemDefault());
-				punto = new HashMap<>();
-
-				punto.put("x", zdt.toInstant().toEpochMilli());
-				punto.put("y", fecha.getValue() / 1000);
-
-				data.add(punto);
-			}
+			
+			return fechas;
 		}
 
-		if (!data.isEmpty())
-			list.add(data);
-		else
-			list = null;
-
-		return list;
+		return null;
 	}
 
 }

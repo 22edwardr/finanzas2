@@ -69,153 +69,125 @@
 						<div class="col-lg-6 col-sm-12" id="graficoCategorias"
 							style="height: 30em;"></div>
 					</div>
-					
+
 					<table class="table table-striped">
-					<thead>
-						<tr>
-							<th th:text="#{text.tablero.nombre}">Nombre</th>
-							<th th:text="#{text.tablero.ingresos}">Ingresos</th>
-							<th th:text="#{text.tablero.egresos}">Egresos</th>
-							<th th:text="#{text.tablero.total}">Total</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="fuente : *{fuenteResumen}">
-							<td th:text="${fuente.nombre}"></td>
-							<td th:text="${fuente.ingresos}"></td>
-							<td th:text="${fuente.egresos}"></td>
-							<td th:text="${fuente.ingresos} - ${fuente.egresos}"></td>
-						</tr>
-					</tbody>
-				</table>
-				
+						<thead>
+							<tr>
+								<th th:text="#{text.tablero.nombre}">Nombre</th>
+								<th th:text="#{text.tablero.ingresos}">Ingresos</th>
+								<th th:text="#{text.tablero.egresos}">Egresos</th>
+								<th th:text="#{text.tablero.total}">Total</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="fuente : *{fuenteResumen}">
+								<td th:text="${fuente.nombre}"></td>
+								<td th:text="${fuente.ingresos}"></td>
+								<td th:text="${fuente.egresos}"></td>
+								<td th:text="${fuente.ingresos} - ${fuente.egresos}"></td>
+							</tr>
+						</tbody>
+					</table>
+
 					<table class="table table-striped">
-					<thead>
-						<tr>
-							<th th:text="#{text.tablero.fecha}">Fecha</th>
-							<th th:text="#{text.tablero.categoria}">Categoria</th>
-							<th th:text="#{text.tablero.fuente}">Fuente</th>
-							<th th:text="#{text.tablero.descripcion}">Descripcion</th>
-							<th th:text="#{text.tablero.valor}">Valor</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="movimiento : *{movimientoResumen}">
-							<td th:text="${movimiento.fecha}"></td>
-							<td th:text="${movimiento.categoria}"></td>
-							<td th:text="${movimiento.fuente}"></td>
-							<td th:text="${movimiento.descripcion}"></td>
-							<td th:text="${movimiento.valor}"></td>
-						</tr>
-					</tbody>
-				</table>
+						<thead>
+							<tr>
+								<th th:text="#{text.tablero.fecha}">Fecha</th>
+								<th th:text="#{text.tablero.categoria}">Categoria</th>
+								<th th:text="#{text.tablero.fuente}">Fuente</th>
+								<th th:text="#{text.tablero.descripcion}">Descripcion</th>
+								<th th:text="#{text.tablero.valor}">Valor</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="movimiento : *{movimientoResumen}">
+								<td th:text="${movimiento.fecha}"></td>
+								<td th:text="${movimiento.categoria}"></td>
+								<td th:text="${movimiento.fuente}"></td>
+								<td th:text="${movimiento.descripcion}"></td>
+								<td th:text="${movimiento.valor}"></td>
+							</tr>
+						</tbody>
+					</table>
 
 				</div>
 			</div>
 		</div>
 	</div>
 	<footer th:replace="layout/layout :: footer"></footer>
-	<script th:src="@{/js/canvasjs.min.js}"></script>
+	<script th:src="@{/js/loader.js}"></script>
 	<script th:inline="javascript">
 		/*<![CDATA[*/
 
 		$(document).ready(function() {
-			/*[# th:if="${tableroForm.graficoCategorias != null}"]*/
-			graficoCategorias();
 
+			google.charts.load('current', {
+				'packages' : [ 'corechart' ]
+			});
+			/*[# th:if="${tableroForm.graficoCategorias != null}"]*/
+			google.charts.setOnLoadCallback(graficoCategorias);
 			/*[/]*/
 			/*[# th:if="${tableroForm.graficoAhorros != null}"]*/
-
-			graficoAhorros();
-
+			google.charts.setOnLoadCallback(graficoAhorros);
 			/*[/]*/
 		});
 
 		function graficoCategorias() {
-			var dps = [ [] ];
-			var chart = new CanvasJS.Chart(
-					"graficoCategorias",
-					{
-						theme : "light2",
-						exportEnabled : true,
-						animationEnabled : true,
-						title : {
-							text : /*[[#{text.tablero.graficoCategorias.titulo}]]*/"Categorias"
-						},
-						data : [ {
-							type : "pie",
-							showInLegend : "true",
-							legendText : "{label}",
-							yValueFormatString : "\"$\"###,###.##",
-							indexLabelFontSize : 16,
-							indexLabel : "{label} - {y}",
-							dataPoints : dps[0]
-						} ]
-					});
-
+			var data = [ [ "Categoria", "Valor" ] ];
 			var yValue;
 			var label;
-
-			/*[# th:each="dataPoints, stat : ${tableroForm.graficoCategorias} "]*/
-			/*[# th:each="point : ${dataPoints} "]*/
-			yValue = parseFloat(/*[[${point.y}]]*/0);
-			label = /*[[${point.label}]]*/"";
-			dps[parseInt(/*[[${stat.index}]]*/0)].push({
-				label : label,
-				y : yValue,
-			});
-			/*[/]*/
+			/*[# th:each="dataPoint : ${tableroForm.graficoCategorias} "]*/
+			yValue = parseFloat(/*[[${dataPoint.value}]]*/0);
+			label = /*[[${dataPoint.key}]]*/"";
+			data.push([ label, yValue ]);
 			/*[/]*/
 
-			chart.render();
+			data = google.visualization.arrayToDataTable(data);
 
+			var options = {
+				title : "Categorias",
+				legend : {
+					position : "bottom"
+				}
+			};
+
+			var chart = new google.visualization.PieChart(document
+					.getElementById("graficoCategorias"));
+
+			chart.draw(data, options);
 		}
 
 		function graficoAhorros() {
-			var dps = [ [] ];
-			var chart = new CanvasJS.Chart(
-					"graficoAhorros",
-					{
-						theme : "light2", // "light1", "dark1", "dark2"
-						animationEnabled : true,
-						title : {
-							text : /*[[#{text.tablero.graficoAhorros.titulo}]]*/"Ahorros"
-						},
-						axisX : {
-							valueFormatString : /*[[${tableroForm.tipoConsulta == 2 ? 'DD MMM YY' : 'MMM YY'}]]*/"MMM YY"
-						},
-						axisY : {
-							suffix : " K"
-						},
-						data : [ {
-							type : "line",
-							xValueType : "dateTime",
-							xValueFormatString : /*[[${tableroForm.tipoConsulta == 2 ? 'DD MMM YY' : 'MMM YY'}]]*/"MMM YY",
-							yValueFormatString : "###,###.##",
-							dataPoints : dps[0]
-						} ]
-					});
-
-			var xValue;
+			var data = [ [ "Fecha", "Valor","Total" ] ];
 			var yValue;
-
-			/*[# th:each="dataPoints, stat : ${tableroForm.graficoAhorros} "]*/
-			/*[# th:each="point : ${dataPoints} "]*/
-			xValue = parseInt(/*[[${point.x}]]*/0);
-			yValue = parseFloat(/*[[${point.y}]]*/0);
-			dps[parseInt(/*[[${stat.index}]]*/0)].push({
-				x : xValue,
-				y : yValue
-			});
+			var label;
+			var total;
+			
+			total = 0;
+			/*[# th:each="dataPoint : ${tableroForm.graficoAhorros} "]*/
+			yValue = parseFloat(/*[[${dataPoint.value}]]*/0);
+			label = /*[[${dataPoint.key}]]*/"";
+			total += yValue
+			data.push([ label, yValue, total ]);
 			/*[/]*/
-			/*[/]*/
 
-			chart.render();
+			data = google.visualization.arrayToDataTable(data);
+
+			var options = {
+				title : "Ahorros",
+				legend : {
+					position : "bottom"
+				}
+			};
+
+			var chart = new google.visualization.LineChart(document
+					.getElementById("graficoAhorros"));
+
+			chart.draw(data, options);
 		}
 
 		/*]]>*/
 	</script>
 </body>
-</html>
 <!-- https://stackoverflow.com/questions/41352424/thymeleaf-foreach-loop-in-javascript
  https://stackoverflow.com/questions/31771821/thymeleaf-how-to-add-conditional-block-in-javascript -->

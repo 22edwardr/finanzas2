@@ -27,9 +27,9 @@ public class TableroForm implements Serializable {
 	private List<FuenteResumen> fuenteResumen;
 	private List<MovimientoResumen> movimientoResumen;
 	// https://canvasjs.com/spring-mvc-charts/line-chart/
-	private List<List<Map<Object, Object>>> graficoAhorros;
+	private Map<String, Double> graficoAhorros;
 	// https://canvasjs.com/spring-mvc-charts/animated-chart/
-	private List<List<Map<Object, Object>>> graficoCategorias;
+	private Map<String, Double> graficoCategorias;
 
 	@AssertTrue
 	private boolean isConsultaFecha() {
@@ -96,19 +96,19 @@ public class TableroForm implements Serializable {
 		this.valorTotal = valorTotal;
 	}
 
-	public List<List<Map<Object, Object>>> getGraficoAhorros() {
+	public Map<String, Double> getGraficoAhorros() {
 		return graficoAhorros;
 	}
 
-	public void setGraficoAhorros(List<List<Map<Object, Object>>> graficoAhorros) {
+	public void setGraficoAhorros(Map<String, Double> graficoAhorros) {
 		this.graficoAhorros = graficoAhorros;
 	}
 
-	public List<List<Map<Object, Object>>> getGraficoCategorias() {
+	public Map<String, Double> getGraficoCategorias() {
 		return graficoCategorias;
 	}
 
-	public void setGraficoCategorias(List<List<Map<Object, Object>>> graficoCategorias) {
+	public void setGraficoCategorias(Map<String, Double> graficoCategorias) {
 		this.graficoCategorias = graficoCategorias;
 	}
 
