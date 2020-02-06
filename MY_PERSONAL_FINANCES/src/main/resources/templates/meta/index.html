@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head">
+</head>
+<body>
+	<header th:replace="layout/layout :: header"></header>
+	<div class="container py-4">
+		<div class="card bg-light">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+				<h4 class="card-title">
+					<a class="btn btn-primary btn-xs" th:href="@{/meta/form/}" th:text="#{text.meta.crearMeta}">Crear
+						Meta</a>
+				</h4>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th th:text="#{text.meta.nombre}">Nombre</th>
+							<th th:text="#{text.meta.tipo}">Tipo</th>
+							<th th:text="#{text.meta.fechaInicial}">Fecha inicial</th>
+							<th th:text="#{text.meta.fechaFinal}">Fecha final</th>
+							<th th:text="#{text.meta.meta}">Meta</th>
+							<th th:text="#{text.meta.logrado}">Logrado</th>
+							<th th:text="#{text.meta.porcentajeRecorrido}">Porcentaje recorrido</th>
+							<th th:text="#{text.meta.balance}">Balance</th>
+							<th th:text="#{text.meta.estado}">Estado</th>
+							<th th:text="#{text.meta.editar}">Editar</th>
+							<th th:text="#{text.meta.eliminar}">Eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="meta : ${metas}">
+							<td th:text="${meta.nombre}"></td>
+							<td th:text="${meta.tipo == 'A'} ?  #{text.meta.ahorro} : #{text.meta.gasto}"></td>
+							<td th:text="${meta.fechaInicial}"></td>
+							<td th:text="${meta.fechaFinal}"></td>
+							<td th:text="${meta.valor}"></td>
+							<td th:text="${meta.balance}"></td>
+							<td th:text="${meta.porcentaje}"></td>
+							<td th:text="${meta.balanceActual}"></td>
+							<td th:text="${meta.estado}"></td>
+							<td><a class="btn btn-success btn-xs" th:href="@{'/meta/form/' + ${meta.id}}" th:text="#{text.meta.editar}"></a></td>
+							<td><a th:href="@{/meta/eliminar/} + ${meta.id}" th:text="#{text.meta.eliminar}" class="btn btn-danger btn-xs"></a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

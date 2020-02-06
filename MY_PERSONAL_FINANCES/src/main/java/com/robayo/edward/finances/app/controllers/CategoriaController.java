@@ -102,7 +102,7 @@ public class CategoriaController {
 	}
 
 	@GetMapping("/inactivarActivar/{id}")
-	public String getInactivarActivar(@PathVariable("id") Long id, Model model, Locale locale,
+	public String getInactivarActivar(@PathVariable("id") Long id, Locale locale,
 			RedirectAttributes flash,Authentication auth) {
 		Long idUsuario;
 		Categoria categoria;
@@ -130,8 +130,6 @@ public class CategoriaController {
 											: messageSource.getMessage("text.categorias.inactivo", null, locale) },
 									locale));
 		}
-
-		model.addAttribute("titulo", messageSource.getMessage("text.categoria.editarCategoria", null, locale));
 
 		return "redirect:/categoria/";
 	}

@@ -47,6 +47,10 @@
 						class="nav-link" th:href="@{/tablero/}"
 						th:text="#{text.menu.tablero}">Tablero<span class="sr-only">(Tablero)</span>
 					</a></li>
+					<li class="nav-item" sec:authorize="hasRole('ROLE_USUARIO')"><a
+						class="nav-link" th:href="@{/meta/}"
+						th:text="#{text.menu.metas}">Metas<span class="sr-only">(Metas)</span>
+					</a></li>
 
 
 				</ul>
