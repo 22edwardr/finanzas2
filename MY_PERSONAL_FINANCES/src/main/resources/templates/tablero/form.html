@@ -61,7 +61,7 @@
 					<div class="jumbotron jumbotron-fluid">
 						<div class="container">
 							<h1 class="display-4" align="center"
-								th:text="'$ ' + *{valorTotal}"></h1>
+								th:text="${#numbers.formatDecimal(tableroForm.valorTotal, 1, 'COMMA', 0, 'POINT')}"></h1>
 						</div>
 					</div>
 					<div class="row">
@@ -82,9 +82,9 @@
 						<tbody>
 							<tr th:each="fuente : *{fuenteResumen}">
 								<td th:text="${fuente.nombre}"></td>
-								<td th:text="${fuente.ingresos}"></td>
-								<td th:text="${fuente.egresos}"></td>
-								<td th:text="${fuente.ingresos} - ${fuente.egresos}"></td>
+								<td th:text="${#numbers.formatDecimal(fuente.ingresos, 1, 'COMMA', 0, 'POINT')}"></td>
+								<td th:text="${#numbers.formatDecimal(fuente.egresos, 1, 'COMMA', 0, 'POINT')}"></td>
+								<td th:text="${#numbers.formatDecimal(fuente.ingresos - fuente.egresos, 1, 'COMMA', 0, 'POINT')}"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -105,7 +105,7 @@
 								<td th:text="${movimiento.categoria}"></td>
 								<td th:text="${movimiento.fuente}"></td>
 								<td th:text="${movimiento.descripcion}"></td>
-								<td th:text="${movimiento.valor}"></td>
+								<td th:text="${#numbers.formatDecimal(movimiento.valor, 1, 'COMMA', 0, 'POINT')}"></td>
 							</tr>
 						</tbody>
 					</table>

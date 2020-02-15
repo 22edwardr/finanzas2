@@ -126,7 +126,7 @@ public class TableroService implements ITableroService {
 					fechaText = fecha.format(DateTimeFormatter.ofPattern("dd"));
 				} else {
 					fecha = LocalDate.of(c.getFecha().get(ChronoField.YEAR), c.getFecha().getMonth(), 1);
-					fechaText = fecha.format(DateTimeFormatter.ofPattern("yyyy MMMM"));
+					fechaText = fecha.format(DateTimeFormatter.ofPattern("yyyyMM"));
 				}
 
 				valorMovimiento = c.getValor() * (c.getDebito() ? 1 : -1);
